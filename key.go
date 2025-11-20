@@ -404,6 +404,13 @@ func getFlagsFromValue(value []string) (flags C.MMKeyFlags) {
 	return
 }
 
+func upKeyArr(keyArr []string, pid int) {
+	for i := 0; i < len(keyArr); i++ {
+		key1, _ := checkKeyCodes(keyArr[i])
+		C.toggleKeyCode(key1, false, C.MOD_NONE, C.uintptr(pid))
+	}
+}
+
 func keyTaps(k string, keyArr []string, pid int) error {
 	flags := getFlagsFromValue(keyArr)
 	key, err := checkKeyCodes(k)
@@ -413,6 +420,7 @@ func keyTaps(k string, keyArr []string, pid int) error {
 
 	tapKeyCode(key, flags, C.uintptr(pid))
 	MilliSleep(KeySleep)
+	upKeyArr(keyArr, pid)
 	return nil
 }
 
@@ -441,6 +449,9 @@ func keyTogglesB(k string, down bool, keyArr []string, pid int) error {
 
 	C.toggleKeyCode(key, C.bool(down), flags, C.uintptr(pid))
 	MilliSleep(KeySleep)
+	if !down {
+		upKeyArr(keyArr, pid)
+	}
 	return nil
 }
 
