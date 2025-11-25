@@ -57,7 +57,9 @@ GCC
 brew install go
 ```
 
-Xcode Command Line Tools (And Privacy setting: [#277](https://github.com/go-vgo/robotgo/issues/277))
+Xcode Command Line Tools; <br>
+And Privacy setting, add Screen Recording and Accessibility under: <br>
+`System Settings > Privacy & Security > Accessibility, Screen & System Audio Recording`.
 
 ```
 xcode-select --install
@@ -89,11 +91,9 @@ X11 with the XTest extension (the Xtst library)
 
 "Clipboard": xsel xclip
 
-
 "Bitmap": libpng (Just used by the "bitmap".)
 
 "Event-Gohook": xcb, xkb, libxkbcommon (Just used by the "hook".)
-
 ```
 
 ##### Ubuntu:
@@ -111,13 +111,11 @@ sudo apt install libx11-dev xorg-dev libxtst-dev
 # Clipboard
 sudo apt install xsel xclip
 
-#
 # Bitmap
 sudo apt install libpng++-dev
 
 # GoHook
 sudo apt install xcb libxcb-xkb-dev x11-xkb-utils libx11-xcb-dev libxkbcommon-x11-dev libxkbcommon-dev
-
 ```
 
 ##### Fedora:
@@ -129,13 +127,11 @@ sudo dnf install libXtst-devel
 # Clipboard
 sudo dnf install xsel xclip
 
-#
 # Bitmap
 sudo dnf install libpng-devel
 
 # GoHook
 sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xorg-x11-xkb-utils-devel
-
 ```
 
 ## Installation:
