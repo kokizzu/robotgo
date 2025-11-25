@@ -28,8 +28,6 @@ RobotGo supports Mac, Windows, and Linux (X11); and robotgo supports arm64 and x
 - [Cross-Compiling](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
 - [Authors](#authors)
 - [Plans](#plans)
-<!-- - [Contributors](#contributors) -->
-
 - [License](#license)
 
 ## Docs
@@ -513,7 +511,6 @@ func main() {
 
 - [The author is Evans](https://github.com/vcaesar)
 - [Maintainers](https://github.com/orgs/go-vgo/people)
-<!-- - [Contributors](https://github.com/go-vgo/robotgo/graphs/contributors) -->
 
 ## Plans
 
