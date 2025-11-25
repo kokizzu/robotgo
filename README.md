@@ -1,25 +1,20 @@
 # Robotgo
 
-<!--<img align="right" src="https://raw.githubusercontent.com/go-vgo/robotgo/master/logo.jpg">-->
-<!--[![Build Status](https://travis-ci.org/go-vgo/robotgo.svg)](https://travis-ci.org/go-vgo/robotgo)
-[![codecov](https://codecov.io/gh/go-vgo/robotgo/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vgo/robotgo)-->
-<!--<a href="https://circleci.com/gh/go-vgo/robotgo/tree/dev"><img src="https://img.shields.io/circleci/project/go-vgo/robotgo/dev.svg" alt="Build Status"></a>-->
+<!-- <img align="right" src="https://raw.githubusercontent.com/go-vgo/robotgo/master/logo.jpg"> -->
+<!-- [![codecov](https://codecov.io/gh/go-vgo/robotgo/branch/master/graph/badge.svg)](https://codecov.io/gh/go-vgo/robotgo) -->
 
 [![Build Status](https://github.com/go-vgo/robotgo/workflows/Go/badge.svg)](https://github.com/go-vgo/robotgo/commits/master)
 [![CircleCI Status](https://circleci.com/gh/go-vgo/robotgo.svg?style=shield)](https://circleci.com/gh/go-vgo/robotgo)
-[![Build Status](https://travis-ci.org/go-vgo/robotgo.svg)](https://travis-ci.org/go-vgo/robotgo)
 ![Appveyor](https://ci.appveyor.com/api/projects/status/github/go-vgo/robotgo?branch=master&svg=true)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-vgo/robotgo)](https://goreportcard.com/report/github.com/go-vgo/robotgo)
 [![GoDoc](https://pkg.go.dev/badge/github.com/go-vgo/robotgo?status.svg)](https://pkg.go.dev/github.com/go-vgo/robotgo?tab=doc)
 [![GitHub release](https://img.shields.io/github/release/go-vgo/robotgo.svg)](https://github.com/go-vgo/robotgo/releases/latest)
-[![Join the chat at https://gitter.im/go-vgo/robotgo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/go-vgo/robotgo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-<!-- [![Release](https://github-release-version.herokuapp.com/github/go-vgo/robotgo/release.svg?style=flat)](https://github.com/go-vgo/robotgo/releases/latest) -->
-<!-- <a href="https://github.com/go-vgo/robotgo/releases"><img src="https://img.shields.io/badge/%20version%20-%206.0.0%20-blue.svg?style=flat-square" alt="Releases"></a> -->
 
 > Golang Desktop Automation. Control the mouse, keyboard, read the screen, process, Window Handle, image and bitmap and global event listener.
 
-RobotGo supports Mac, Windows, and Linux(X11); and robotgo supports arm64 and x86-amd64.
+RobotGo supports Mac, Windows, and Linux (X11); and robotgo supports arm64 and x86-amd64.
+
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) get the JavaScript, Python, Lua and others version, tech support, new features and newer robotgo version (such as Wayland support).
 
 ## Contents
 
@@ -33,8 +28,6 @@ RobotGo supports Mac, Windows, and Linux(X11); and robotgo supports arm64 and x8
 - [Cross-Compiling](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
 - [Authors](#authors)
 - [Plans](#plans)
-- [Donate](#donate)
-- [Contributors](#contributors)
 - [License](#license)
 
 ## Docs
@@ -45,8 +38,6 @@ RobotGo supports Mac, Windows, and Linux(X11); and robotgo supports arm64 and x8
 ## Binding:
 
 [ADB](https://github.com/vcaesar/adb), packaging android adb API.
-
-[Robotn](https://github.com/vcaesar/robotn), binding JavaScript and other, support more language.
 
 ## Requirements:
 
@@ -518,9 +509,8 @@ func main() {
 
 ## Authors
 
-- [The author is vz](https://github.com/vcaesar)
+- [The author is Evans](https://github.com/vcaesar)
 - [Maintainers](https://github.com/orgs/go-vgo/people)
-- [Contributors](https://github.com/go-vgo/robotgo/graphs/contributors)
 
 ## Plans
 
