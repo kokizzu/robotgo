@@ -10,11 +10,12 @@
 [![GoDoc](https://pkg.go.dev/badge/github.com/go-vgo/robotgo?status.svg)](https://pkg.go.dev/github.com/go-vgo/robotgo?tab=doc)
 [![GitHub release](https://img.shields.io/github/release/go-vgo/robotgo.svg)](https://github.com/go-vgo/robotgo/releases/latest)
 
-> Golang Desktop Automation. Control the mouse, keyboard, read the screen, process, Window Handle, image and bitmap and global event listener.
+> Golang Desktop Automation, auto test and AI Computer Use. <br>
+> Control the mouse, keyboard, read the screen, process, Window Handle, image and bitmap and global event listener.
 
 RobotGo supports Mac, Windows, and Linux (X11); and robotgo supports arm64 and x86-amd64.
 
-[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) get the JavaScript, Python, Lua and others version, tech support, new features and newer robotgo version (such as Wayland support).
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) get the JavaScript, Python, Lua and others version, tech supports, new features and newest robotgo version (such as Wayland support, "no open-source version forever").
 
 ## Contents
 
