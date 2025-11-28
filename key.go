@@ -670,15 +670,22 @@ func inputUTF(str string) {
 	C.free(unsafe.Pointer(cstr))
 }
 
-// TypeStr send a string (supported UTF-8)
+// TypeStr tap a string
 //
-// robotgo.TypeStr(string: "The string to send", int: pid, "milli_sleep time", "x11 option")
+// Deprecated: use the Type()
+func TypeStr(str string, args ...int) {
+	Type(str, args...)
+}
+
+// Type type a string (supported UTF-8)
+//
+// robotgo.Type(string: "The string to send", int: pid, "milli_sleep time", "x11 option")
 //
 // Examples:
 //
-//	robotgo.TypeStr("abc@123, Hi galaxy, こんにちは")
-//	robotgo.TypeStr("To be or not to be, this is questions.", pid int)
-func TypeStr(str string, args ...int) {
+//	robotgo.Type("abc@123, Hi galaxy, こんにちは")
+//	robotgo.Type("To be or not to be, this is questions.", pid int)
+func Type(str string, args ...int) {
 	var tm, tm1 = 0, 7
 
 	if len(args) > 1 {
@@ -719,14 +726,25 @@ func TypeStr(str string, args ...int) {
 	MilliSleep(KeySleep)
 }
 
-// PasteStr paste a string (support UTF-8),
-// write the string to clipboard and tap `cmd + v`
+// PasteStr paste a string
+//
+// Deprecated: use the Paste()
 func PasteStr(str string) error {
+	return Paste(str)
+}
+
+// Paste paste a string (supported UTF-8),
+// write the string to clipboard and tap `cmd + v`
+func Paste(str string) error {
 	err := clipboard.WriteAll(str)
 	if err != nil {
 		return err
 	}
+	return CmdV()
+}
 
+// CmdV tap key command + v or control + v
+func CmdV() error {
 	if runtime.GOOS == "darwin" {
 		return KeyTap("v", "command")
 	}
@@ -734,9 +752,16 @@ func PasteStr(str string) error {
 	return KeyTap("v", "control")
 }
 
-// TypeStrDelay type string with delayed
-// And you can use robotgo.KeySleep = 100 to delayed not this function
+// TypeStrDelay type string width delay
+//
+// Deprecated: use the TypeDelay()
 func TypeStrDelay(str string, delay int) {
+	TypeDelay(str, delay)
+}
+
+// TypeDelay type string with delayed
+// And you can use robotgo.KeySleep = 100 to delayed not this function
+func TypeDelay(str string, delay int) {
 	TypeStr(str)
 	MilliSleep(delay)
 }
