@@ -20,21 +20,21 @@ import (
 
 func typeStr() {
 	// typing "Hello World"
-	robotgo.TypeStr("Hello World!", 0, 1)
+	robotgo.Type("Hello World!", 0, 1)
 	robotgo.KeySleep = 100
-	robotgo.TypeStr("だんしゃり")
+	robotgo.Type("だんしゃり")
 
-	robotgo.TypeStr("Hi galaxy, hi stars, hi MT.Rainier, hi sea. こんにちは世界.")
-	robotgo.TypeStr("So, hi, bye! 你好, 再见!")
+	robotgo.Type("Hi galaxy, hi stars, hi MT.Rainier, hi sea. こんにちは世界.")
+	robotgo.Type("So, hi, bye! 你好, 再见!")
 	robotgo.Sleep(1)
 
-	robotgo.TypeStr("Hi, Seattle space needle, Golden gate bridge, One world trade center.")
+	robotgo.Type("Hi, Seattle space needle, Golden gate bridge, One world trade center.")
 	robotgo.MilliSleep(100)
 
 	ustr := uint32(robotgo.CharCodeAt("So, hi, bye!", 0))
 	robotgo.UnicodeType(ustr)
 
-	err := robotgo.PasteStr("paste string")
+	err := robotgo.Paste("paste string")
 	fmt.Println("PasteStr: ", err)
 }
 
@@ -76,7 +76,7 @@ func keyTap() {
 }
 
 func special() {
-	robotgo.TypeStr("{}")
+	robotgo.Type("{}")
 	robotgo.KeyTap("[", "]")
 
 	robotgo.KeyToggle("(")

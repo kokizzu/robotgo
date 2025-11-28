@@ -216,12 +216,12 @@ import (
 )
 
 func main() {
-  robotgo.TypeStr("Hello World")
-  robotgo.TypeStr("だんしゃり", 0, 1)
-  // robotgo.TypeStr("テストする")
+  robotgo.Type("Hello World")
+  robotgo.Type("だんしゃり", 0, 1)
+  // robotgo.Type("テストする")
 
-  robotgo.TypeStr("Hi, Seattle space needle, Golden gate bridge, One world trade center.")
-  robotgo.TypeStr("Hi galaxy, hi stars, hi MT.Rainier, hi sea. こんにちは世界.")
+  robotgo.Type("Hi, Seattle space needle, Golden gate bridge, One world trade center.")
+  robotgo.Type("Hi galaxy, hi stars, hi MT.Rainier, hi sea. こんにちは世界.")
   robotgo.Sleep(1)
 
   // ustr := uint32(robotgo.CharCodeAt("Test", 0))
@@ -229,7 +229,7 @@ func main() {
 
   robotgo.KeySleep = 100
   robotgo.KeyTap("enter")
-  // robotgo.TypeStr("en")
+  // robotgo.Type("en")
   robotgo.KeyTap("i", "alt", "cmd")
 
   arr := []string{"alt", "cmd"}
@@ -473,7 +473,7 @@ func main() {
     fmt.Println("pids... ", fpid)
 
     if len(fpid) > 0 {
-      robotgo.TypeStr("Hi galaxy!", fpid[0])
+      robotgo.Type("Hi galaxy!", fpid[0])
       robotgo.KeyTap("a", fpid[0], "cmd")
 
       robotgo.KeyToggle("a", fpid[0])
