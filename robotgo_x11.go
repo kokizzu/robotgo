@@ -121,7 +121,7 @@ func ActivePid(pid int, args ...int) error {
 	}
 
 	// get the xid from pid
-	xid, err := GetXidFromPid(xu, pid)
+	xid, err := GetXidByPid(xu, pid)
 	if err != nil {
 		return err
 	}
@@ -145,12 +145,19 @@ func GetXid(xu *xgbutil.XUtil, pid int) (xproto.Window, error) {
 		}
 	}
 
-	xid, err := GetXidFromPid(xu, pid)
+	xid, err := GetXidByPid(xu, pid)
 	return xid, err
 }
 
+// Deprecated: use the GetXidByPid(),
+//
 // GetXidFromPid get the xid from pid
 func GetXidFromPid(xu *xgbutil.XUtil, pid int) (xproto.Window, error) {
+	return GetXidByPid(xu, pid)
+}
+
+// GetXidByPid get the xid from pid
+func GetXidByPid(xu *xgbutil.XUtil, pid int) (xproto.Window, error) {
 	windows, err := ewmh.ClientListGet(xu)
 	if err != nil {
 		return 0, err
