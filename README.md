@@ -72,16 +72,22 @@ xcode-select --install
 winget install Golang.go
 ```
 
+[llvm-mingw](https://github.com/mstorsjo/llvm-mingw)
+
 ```
 winget install MartinStorsjo.LLVM-MinGW.UCRT
 ```
 
-Or [MinGW-w64](https://sourceforge.net/projects/mingw-w64/files) (Use recommended) or others Mingw [llvm-mingw](https://github.com/mstorsjo/llvm-mingw);
+or [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files)
 
-Download the Mingw, then set system environment variables `C:\mingw64\bin` to the Path.
+```
+winget install BrechtSanders.WinLibs.POSIX.UCRT
+```
+
+Or Download the [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files) and the others gcc, then set system environment variables like `C:\mingw64\bin` to the env `Path`.
 [Set environment variables to run GCC from command line](https://www.youtube.com/results?search_query=Set+environment+variables+to+run+GCC+from+command+line).
 
-`Or the other GCC` (But you should compile the "libpng" with yourself when use the [bitmap](https://github.com/vcaesar/bitmap).)
+`Or The others GCC` (Except the Mingw-w64, you should compile the "libpng" with yourself when use the [bitmap](https://github.com/vcaesar/bitmap).)
 
 #### For everything else:
 
