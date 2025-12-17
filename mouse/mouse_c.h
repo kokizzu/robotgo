@@ -163,11 +163,16 @@ int toggleMouseErr(bool down, MMMouseButton button) {
 		CGEventSourceRef source = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
 		CGEventRef event = CGEventCreateMouseEvent(source, mouseType, currentPos, (CGMouseButton)button);
 
-		CGError err = CGEventPost(kCGHIDEventTap, event);
+		if (event == NULL) {
+			CFRelease(source);
+			return (int)kCGErrorCannotComplete;
+		}
+
+		CGEventPost(kCGHIDEventTap, event);
 		CFRelease(event);
 		CFRelease(source);
 
-		return err == kCGErrorSuccess ? 0 : (int)err;
+		return 0;
 	#elif defined(USE_X11)
 		Display *display = XGetMainDisplay();
 		Status status = XTestFakeButtonEvent(display, button, down ? True : False, CurrentTime);
@@ -181,12 +186,12 @@ int toggleMouseErr(bool down, MMMouseButton button) {
 		mouseInput.type = INPUT_MOUSE;
 		mouseInput.mi.dx = 0;
 		mouseInput.mi.dy = 0;
-	mouseInput.mi.dwFlags = MMMouseToMEventF(down, button);
-	mouseInput.mi.time = 0;
-	mouseInput.mi.dwExtraInfo = 0;
-	mouseInput.mi.mouseData = 0;
-	UINT sent = SendInput(1, &mouseInput, sizeof(mouseInput));
-	return sent == 1 ? 0 : (int)GetLastError();
+		mouseInput.mi.dwFlags = MMMouseToMEventF(down, button);
+		mouseInput.mi.time = 0;
+		mouseInput.mi.dwExtraInfo = 0;
+		mouseInput.mi.mouseData = 0;
+		UINT sent = SendInput(1, &mouseInput, sizeof(mouseInput));
+		return sent == 1 ? 0 : (int)GetLastError();
 	#endif
 }
 
@@ -219,19 +224,22 @@ int doubleClickErr(MMMouseButton button){
 		CGEventSourceRef source = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
 		CGEventRef event = CGEventCreateMouseEvent(source, mouseTypeDown, currentPos, kCGMouseButtonLeft);
 
+		if (event == NULL) {
+			CFRelease(source);
+			return (int)kCGErrorCannotComplete;
+		}
+
 		/* Set event to double click. */
 		CGEventSetIntegerValueField(event, kCGMouseEventClickState, 2);
-		CGError err = CGEventPost(kCGHIDEventTap, event);
+		CGEventPost(kCGHIDEventTap, event);
 
 		CGEventSetType(event, mouseTypeUP);
-		if (err == kCGErrorSuccess) {
-			err = CGEventPost(kCGHIDEventTap, event);
-		}
+		CGEventPost(kCGHIDEventTap, event);
 
 		CFRelease(event);
 		CFRelease(source);
 
-		return err == kCGErrorSuccess ? 0 : (int)err;
+		return 0;
 	#else
 		/* Double click for everything else. */
 		int err = clickMouseErr(button);
