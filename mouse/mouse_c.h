@@ -156,20 +156,29 @@ MMPointInt32 location() {
 }
 
 /* Press down a button, or release it. */
-void toggleMouse(bool down, MMMouseButton button) {
+int toggleMouseErr(bool down, MMMouseButton button) {
 	#if defined(IS_MACOSX)
 		const CGPoint currentPos = CGPointFromMMPointInt32(location());
 		const CGEventType mouseType = MMMouseToCGEventType(down, button);
 		CGEventSourceRef source = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
 		CGEventRef event = CGEventCreateMouseEvent(source, mouseType, currentPos, (CGMouseButton)button);
 
+		if (event == NULL) {
+			CFRelease(source);
+			return (int)kCGErrorCannotComplete;
+		}
+
 		CGEventPost(kCGHIDEventTap, event);
 		CFRelease(event);
 		CFRelease(source);
+
+		return 0;
 	#elif defined(USE_X11)
 		Display *display = XGetMainDisplay();
-		XTestFakeButtonEvent(display, button, down ? True : False, CurrentTime);
+		Status status = XTestFakeButtonEvent(display, button, down ? True : False, CurrentTime);
 		XSync(display, false);
+
+		return status ? 0 : 1;
 	#elif defined(IS_WINDOWS)
 		// mouse_event(MMMouseToMEventF(down, button), 0, 0, 0, 0);
 		INPUT mouseInput;
@@ -181,18 +190,31 @@ void toggleMouse(bool down, MMMouseButton button) {
 		mouseInput.mi.time = 0;
 		mouseInput.mi.dwExtraInfo = 0;
 		mouseInput.mi.mouseData = 0;
-		SendInput(1, &mouseInput, sizeof(mouseInput));
+		UINT sent = SendInput(1, &mouseInput, sizeof(mouseInput));
+		return sent == 1 ? 0 : (int)GetLastError();
 	#endif
 }
 
-void clickMouse(MMMouseButton button){
-	toggleMouse(true, button);
-	microsleep(5.0);
-	toggleMouse(false, button);
+void toggleMouse(bool down, MMMouseButton button) {
+	toggleMouseErr(down, button);
 }
 
-/* Special function for sending double clicks, needed for MacOS. */
-void doubleClick(MMMouseButton button){
+int clickMouseErr(MMMouseButton button){
+	int err = toggleMouseErr(true, button);
+	if (err != 0) {
+		return err;
+	}
+
+	microsleep(5.0);
+
+	return toggleMouseErr(false, button);
+}
+
+void clickMouse(MMMouseButton button){
+	clickMouseErr(button);
+}
+
+int doubleClickErr(MMMouseButton button){
 	#if defined(IS_MACOSX)
 		/* Double click for Mac. */
 		const CGPoint currentPos = CGPointFromMMPointInt32(location());
@@ -201,6 +223,11 @@ void doubleClick(MMMouseButton button){
 
 		CGEventSourceRef source = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
 		CGEventRef event = CGEventCreateMouseEvent(source, mouseTypeDown, currentPos, kCGMouseButtonLeft);
+
+		if (event == NULL) {
+			CFRelease(source);
+			return (int)kCGErrorCannotComplete;
+		}
 
 		/* Set event to double click. */
 		CGEventSetIntegerValueField(event, kCGMouseEventClickState, 2);
@@ -211,12 +238,24 @@ void doubleClick(MMMouseButton button){
 
 		CFRelease(event);
 		CFRelease(source);
+
+		return 0;
 	#else
 		/* Double click for everything else. */
-		clickMouse(button);
+		int err = clickMouseErr(button);
+		if (err != 0) {
+			return err;
+		}
+
 		microsleep(200);
-		clickMouse(button);
+
+		return clickMouseErr(button);
 	#endif
+}
+
+/* Special function for sending double clicks, needed for MacOS. */
+void doubleClick(MMMouseButton button){
+	doubleClickErr(button);
 }
 
 /* Function used to scroll the screen in the required direction. */
