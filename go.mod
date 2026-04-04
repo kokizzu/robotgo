@@ -7,11 +7,11 @@ require (
 	github.com/jezek/xgbutil v0.0.0-20260124183602-9fd151d6a51a
 	github.com/otiai10/gosseract/v2 v2.4.1
 	github.com/tailscale/win v0.0.0-20250627215312-f4da2b8ee071
-	github.com/vcaesar/gops v0.41.0
-	github.com/vcaesar/imgo v0.41.0
+	github.com/vcaesar/gops v0.42.0
+	github.com/vcaesar/imgo v0.42.0
 	github.com/vcaesar/keycode v0.10.1
 	github.com/vcaesar/screenshot v0.11.1
-	github.com/vcaesar/tt v0.20.1
+	github.com/vcaesar/tt v0.30.0
 )
 
 require (
@@ -20,9 +20,9 @@ require (
 	github.com/gen2brain/shm v0.2.1 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
-	github.com/lufia/plan9stats v0.0.0-20260324052639-156f7da3f749 // indirect
+	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
-	github.com/shirou/gopsutil/v4 v4.26.2 // indirect
+	github.com/shirou/gopsutil/v4 v4.26.3 // indirect
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
 	github.com/tklauser/numcpus v0.11.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
