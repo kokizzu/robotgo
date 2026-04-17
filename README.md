@@ -14,6 +14,13 @@
 
 RobotGo supports Mac, Windows, and Linux (X11); and robotgo supports arm64 and x86-amd64.
 
+<p align="center">
+<a href="https://github.com/vcaesar/codg" rel="nofollow">
+<!-- <img width="800" alt="Codg Demo" src="https://github.com/vcaesar/codg/raw/main/demo/26-04.png" /> -->
+<img width="800" alt="Codg Demo" src="https://github.com/vcaesar/codg/raw/main/demo/26-04-1.png" />
+</a>
+</p>
+
 [RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) get the JavaScript, Python, Lua and others version, tech supports, new features and newest robotgo version (such as Wayland support, "no open-source version now").
 
 ## Contents
