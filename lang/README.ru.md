@@ -7,14 +7,14 @@
 [![GitHub release](https://img.shields.io/github/release/go-vgo/robotgo.svg)](https://github.com/go-vgo/robotgo/releases/latest)
 <a href="https://discord.gg/npPb3NzE4A"><img src="https://img.shields.io/discord/1484658282777018551.svg?logo=discord&logoColor=white&label=Discord&color=5865F2" alt="Join the Discord chat at https://discord.gg/npPb3NzE4A"></a>
 
-[English](../README.md) | 简体中文 | [繁體中文](README.zht.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Русский](README.ru.md) | [Português](README.pt.md)
+[English](../README.md) | [简体中文](README.zh.md) | [繁體中文](README.zht.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | Русский | [Português](README.pt.md)
 
-> Golang 桌面自动化、自动测试以及 AI 计算机操作（Computer Use）。<br>
-> 控制鼠标、键盘，读取屏幕，进程、窗口句柄、图像与位图，以及全局事件监听。
+> Автоматизация рабочего стола на Golang, автотестирование и управление компьютером с помощью ИИ (Computer Use). <br>
+> Управление мышью и клавиатурой, чтение экрана, процессы, дескрипторы окон, изображения и битовые карты, а также глобальный перехват событий.
 
-RobotGo 支持 Mac、Windows 和 Linux (X11)；并且支持 arm64 与 x86-amd64 架构。
+RobotGo поддерживает Mac, Windows и Linux (X11); а также поддерживает архитектуры arm64 и x86-amd64.
 
-我正在打造 [Codg](https://github.com/vcaesar/codg)，一个简单易用的 AI 智能体（Agent）工作系统：自动化、异步、并发、高效且高准确度。
+Сейчас я создаю [Codg](https://github.com/vcaesar/codg) — простую и удобную рабочую систему ИИ-агентов (AI Agent): автоматизация, асинхронность, параллелизм, эффективность и высокая точность.
 
 <p align="center">
 <a href="https://github.com/vcaesar/codg" rel="nofollow">
@@ -22,36 +22,36 @@ RobotGo 支持 Mac、Windows 和 Linux (X11)；并且支持 arm64 与 x86-amd64 
 </a>
 </p>
 
-[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) 提供 JavaScript、Python、Lua 等其他语言版本、技术支持、新功能以及最新的 robotgo 版本（例如 Wayland 支持，“目前无开源版本”）。
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) предоставляет версии на JavaScript, Python, Lua и других языках, техническую поддержку, новые возможности, а также новейшую версию robotgo (например, поддержка Wayland, «сейчас нет версии с открытым исходным кодом»).
 
-## 目录
+## Содержание
 
-- [文档](#docs)
-- [绑定](#binding)
-- [环境要求](#requirements)
-- [安装](#installation)
-- [更新](#update)
-- [示例](#examples)
-- [类型转换与按键](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
-- [交叉编译](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
-- [作者](#authors)
-- [计划](#plans)
-- [许可证](#license)
+- [Документация](#docs)
+- [Привязки](#binding)
+- [Требования](#requirements)
+- [Установка](#installation)
+- [Обновление](#update)
+- [Примеры](#examples)
+- [Преобразование типов и клавиши](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
+- [Кросс-компиляция](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
+- [Авторы](#authors)
+- [Планы](#plans)
+- [Лицензия](#license)
 
 ## Docs
 
 - [GoDoc](https://godoc.org/github.com/go-vgo/robotgo) <br>
-- [API 文档](https://github.com/go-vgo/robotgo/blob/master/docs/doc.md)（已弃用，不再更新）
+- [Документация API](https://github.com/go-vgo/robotgo/blob/master/docs/doc.md) (устарела, больше не обновляется)
 
 ## Binding:
 
-[ADB](https://github.com/vcaesar/adb)，封装的 Android adb API。
+[ADB](https://github.com/vcaesar/adb) — обёртка над Android adb API.
 
 ## Requirements:
 
-现在，请在安装 RobotGo 之前确保 `Golang、GCC` 已被正确安装。
+Прежде чем устанавливать RobotGo, пожалуйста, убедитесь, что `Golang, GCC` установлены корректно.
 
-### 全部平台：
+### Все платформы:
 
 ```
 Golang
@@ -59,21 +59,21 @@ Golang
 GCC
 ```
 
-#### MacOS：
+#### Для MacOS:
 
 ```
 brew install go
 ```
 
-Xcode 命令行工具；<br>
-并在隐私设置中，于以下位置添加“屏幕录制”和“辅助功能”权限：<br>
-`系统设置 > 隐私与安全性 > 辅助功能、屏幕与系统音频录制`。
+Инструменты командной строки Xcode; <br>
+А также в настройках конфиденциальности добавьте разрешения «Запись экрана» и «Универсальный доступ» в разделе: <br>
+`Системные настройки > Конфиденциальность и безопасность > Универсальный доступ, Запись экрана и системного звука`.
 
 ```
 xcode-select --install
 ```
 
-#### Windows：
+#### Для Windows:
 
 ```
 winget install Golang.go
@@ -85,32 +85,32 @@ winget install Golang.go
 winget install MartinStorsjo.LLVM-MinGW.UCRT
 ```
 
-或者 [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files)
+или [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files)
 
 ```
 winget install BrechtSanders.WinLibs.POSIX.UCRT
 ```
 
-或者下载 [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files) 以及其他 gcc，然后将类似 `C:\mingw64\bin` 的路径设置到系统环境变量 `Path` 中。
-[设置环境变量以便从命令行运行 GCC](https://www.youtube.com/results?search_query=Set+environment+variables+to+run+GCC+from+command+line)。
+Или скачайте [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files) и другие gcc, затем добавьте путь вида `C:\mingw64\bin` в системную переменную окружения `Path`.
+[Настройка переменных окружения для запуска GCC из командной строки](https://www.youtube.com/results?search_query=Set+environment+variables+to+run+GCC+from+command+line).
 
-`或者使用其他 GCC`（除 Mingw-w64 之外，使用 [bitmap](https://github.com/vcaesar/bitmap) 时你需要自行编译 “libpng”。）
+`Или другие GCC` (кроме Mingw-w64; при использовании [bitmap](https://github.com/vcaesar/bitmap) библиотеку "libpng" вам придётся скомпилировать самостоятельно.)
 
-#### 其他所有平台：
+#### Для всех остальных платформ:
 
 ```
 GCC
 
-带 XTest 扩展的 X11（即 Xtst 库）
+X11 с расширением XTest (библиотека Xtst)
 
-“剪贴板”：xsel xclip
+"Clipboard": xsel xclip
 
-“位图”：libpng（仅 “bitmap” 使用。）
+"Bitmap": libpng (Используется только в "bitmap".)
 
-“事件-Gohook”：xcb, xkb, libxkbcommon（仅 “hook” 使用。）
+"Event-Gohook": xcb, xkb, libxkbcommon (Используется только в "hook".)
 ```
 
-##### Ubuntu：
+##### Ubuntu:
 
 ```yml
 # sudo apt install golang
@@ -132,7 +132,7 @@ sudo apt install libpng++-dev
 sudo apt install xcb libxcb-xkb-dev x11-xkb-utils libx11-xcb-dev libxkbcommon-x11-dev libxkbcommon-dev
 ```
 
-##### Fedora：
+##### Fedora:
 
 ```yml
 # x11
@@ -150,19 +150,19 @@ sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xorg-x11-xkb-utils-de
 
 ## Installation:
 
-在支持 Go module 的情况下（Go 1.11+），只需 import：
+При поддержке Go module (Go 1.11+) достаточно выполнить import:
 
 ```go
 import "github.com/go-vgo/robotgo"
 ```
 
-否则，运行以下命令安装 robotgo 包：
+В противном случае установите пакет robotgo, выполнив команду:
 
 ```
 go get github.com/go-vgo/robotgo
 ```
 
-png.h: No such file or directory？请参阅 [issues/47](https://github.com/go-vgo/robotgo/issues/47)。
+png.h: No such file or directory? См. [issues/47](https://github.com/go-vgo/robotgo/issues/47).
 
 ## Update:
 
@@ -170,12 +170,12 @@ png.h: No such file or directory？请参阅 [issues/47](https://github.com/go-v
 go get -u github.com/go-vgo/robotgo
 ```
 
-注意 go1.10.x 的 C 文件编译缓存问题，[golang #24355](https://github.com/golang/go/issues/24355)。
-`go mod vendor` 问题，[golang #26366](https://github.com/golang/go/issues/26366)。
+Обратите внимание на проблему кэширования компиляции C-файлов в go1.10.x, [golang #24355](https://github.com/golang/go/issues/24355).
+Проблема `go mod vendor`, [golang #26366](https://github.com/golang/go/issues/26366).
 
 ## [Examples:](https://github.com/go-vgo/robotgo/blob/master/examples)
 
-#### [鼠标](https://github.com/go-vgo/robotgo/blob/master/examples/mouse/main.go)
+#### [Мышь](https://github.com/go-vgo/robotgo/blob/master/examples/mouse/main.go)
 
 ```Go
 package main
@@ -217,7 +217,7 @@ func main() {
 }
 ```
 
-#### [键盘](https://github.com/go-vgo/robotgo/blob/master/examples/key/main.go)
+#### [Клавиатура](https://github.com/go-vgo/robotgo/blob/master/examples/key/main.go)
 
 ```Go
 package main
@@ -260,7 +260,7 @@ func main() {
 }
 ```
 
-#### [屏幕](https://github.com/go-vgo/robotgo/blob/master/examples/screen/main.go)
+#### [Экран](https://github.com/go-vgo/robotgo/blob/master/examples/screen/main.go)
 
 ```Go
 package main
@@ -308,7 +308,7 @@ func main() {
 }
 ```
 
-#### [位图](https://github.com/vcaesar/bitmap/blob/main/examples/main.go)
+#### [Битовая карта](https://github.com/vcaesar/bitmap/blob/main/examples/main.go)
 
 ```Go
 package main
@@ -408,7 +408,7 @@ func opencv() {
 }
 ```
 
-#### [事件](https://github.com/robotn/gohook/blob/master/examples/main.go)
+#### [Событие](https://github.com/robotn/gohook/blob/master/examples/main.go)
 
 ```Go
 package main
@@ -469,7 +469,7 @@ func event() {
 }
 ```
 
-#### [窗口](https://github.com/go-vgo/robotgo/blob/master/examples/window/main.go)
+#### [Окно](https://github.com/go-vgo/robotgo/blob/master/examples/window/main.go)
 
 ```Go
 package main
@@ -519,24 +519,24 @@ func main() {
 
 ## Authors
 
-- [作者 Evans](https://github.com/vcaesar)
-- [维护者](https://github.com/orgs/go-vgo/people)
+- [Автор — Evans](https://github.com/vcaesar)
+- [Сопровождающие](https://github.com/orgs/go-vgo/people)
 
 ## Plans
 
-- 将部分 C 代码重构为 Go（例如 x11、windows）
-- 更好的多屏支持
-- Wayland 支持
-- 更新窗口句柄
-- 尝试支持 Android 和 iOS
+- Переписать часть C-кода на Go (например, x11, windows)
+- Улучшить поддержку нескольких экранов
+- Поддержка Wayland
+- Обновить работу с дескрипторами окон
+- Попробовать добавить поддержку Android и iOS
 
 ## Contributors
 
-- 完整的贡献者列表请见[贡献者页面](https://github.com/go-vgo/robotgo/graphs/contributors)。
-- 请参阅[贡献指南](https://github.com/go-vgo/robotgo/blob/master/CONTRIBUTING.md)。
+- Полный список участников см. на [странице участников](https://github.com/go-vgo/robotgo/graphs/contributors).
+- См. [Руководство для участников](https://github.com/go-vgo/robotgo/blob/master/CONTRIBUTING.md).
 
 ## License
 
-Robotgo 主要依据 “Apache License (Version 2.0)” 的条款进行分发，部分内容受各类 BSD 风格许可证约束。
+Robotgo распространяется преимущественно на условиях «Apache License (Version 2.0)», при этом отдельные части подпадают под различные лицензии в стиле BSD.
 
-详见 [LICENSE-APACHE](http://www.apache.org/licenses/LICENSE-2.0)、[LICENSE](https://github.com/go-vgo/robotgo/blob/master/LICENSE)。
+См. [LICENSE-APACHE](http://www.apache.org/licenses/LICENSE-2.0), [LICENSE](https://github.com/go-vgo/robotgo/blob/master/LICENSE).

@@ -7,14 +7,14 @@
 [![GitHub release](https://img.shields.io/github/release/go-vgo/robotgo.svg)](https://github.com/go-vgo/robotgo/releases/latest)
 <a href="https://discord.gg/npPb3NzE4A"><img src="https://img.shields.io/discord/1484658282777018551.svg?logo=discord&logoColor=white&label=Discord&color=5865F2" alt="Join the Discord chat at https://discord.gg/npPb3NzE4A"></a>
 
-[English](../README.md) | 简体中文 | [繁體中文](README.zht.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Русский](README.ru.md) | [Português](README.pt.md)
+[English](../README.md) | [简体中文](README.zh.md) | [繁體中文](README.zht.md) | [日本語](README.ja.md) | 한국어 | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Русский](README.ru.md) | [Português](README.pt.md)
 
-> Golang 桌面自动化、自动测试以及 AI 计算机操作（Computer Use）。<br>
-> 控制鼠标、键盘，读取屏幕，进程、窗口句柄、图像与位图，以及全局事件监听。
+> Golang 데스크톱 자동화, 자동 테스트 및 AI 컴퓨터 사용(Computer Use). <br>
+> 마우스와 키보드 제어, 화면 읽기, 프로세스, 윈도우 핸들, 이미지와 비트맵, 그리고 전역 이벤트 리스너.
 
-RobotGo 支持 Mac、Windows 和 Linux (X11)；并且支持 arm64 与 x86-amd64 架构。
+RobotGo는 Mac, Windows, Linux (X11)를 지원하며, arm64와 x86-amd64 아키텍처도 지원합니다.
 
-我正在打造 [Codg](https://github.com/vcaesar/codg)，一个简单易用的 AI 智能体（Agent）工作系统：自动化、异步、并发、高效且高准确度。
+저는 지금 [Codg](https://github.com/vcaesar/codg)를 만들고 있습니다. 간편하게 코딩하고 작업할 수 있는 AI 에이전트(Agent) 시스템으로, 자동화, 비동기, 동시성, 고효율 그리고 높은 정확도를 갖추고 있습니다.
 
 <p align="center">
 <a href="https://github.com/vcaesar/codg" rel="nofollow">
@@ -22,36 +22,36 @@ RobotGo 支持 Mac、Windows 和 Linux (X11)；并且支持 arm64 与 x86-amd64 
 </a>
 </p>
 
-[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) 提供 JavaScript、Python、Lua 等其他语言版本、技术支持、新功能以及最新的 robotgo 版本（例如 Wayland 支持，“目前无开源版本”）。
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro)는 JavaScript, Python, Lua 등 다른 언어 버전과 기술 지원, 새로운 기능, 그리고 최신 robotgo 버전(예: Wayland 지원, "현재 오픈소스 버전 없음")을 제공합니다.
 
-## 目录
+## 목차
 
-- [文档](#docs)
-- [绑定](#binding)
-- [环境要求](#requirements)
-- [安装](#installation)
-- [更新](#update)
-- [示例](#examples)
-- [类型转换与按键](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
-- [交叉编译](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
-- [作者](#authors)
-- [计划](#plans)
-- [许可证](#license)
+- [문서](#docs)
+- [바인딩](#binding)
+- [요구 사항](#requirements)
+- [설치](#installation)
+- [업데이트](#update)
+- [예제](#examples)
+- [타입 변환과 키](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
+- [크로스 컴파일](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
+- [작성자](#authors)
+- [계획](#plans)
+- [라이선스](#license)
 
 ## Docs
 
 - [GoDoc](https://godoc.org/github.com/go-vgo/robotgo) <br>
-- [API 文档](https://github.com/go-vgo/robotgo/blob/master/docs/doc.md)（已弃用，不再更新）
+- [API 문서](https://github.com/go-vgo/robotgo/blob/master/docs/doc.md) (지원 중단, 더 이상 업데이트되지 않음)
 
 ## Binding:
 
-[ADB](https://github.com/vcaesar/adb)，封装的 Android adb API。
+[ADB](https://github.com/vcaesar/adb), Android adb API를 래핑한 패키지.
 
 ## Requirements:
 
-现在，请在安装 RobotGo 之前确保 `Golang、GCC` 已被正确安装。
+이제 RobotGo를 설치하기 전에 `Golang, GCC`가 올바르게 설치되어 있는지 확인하세요.
 
-### 全部平台：
+### 전체 플랫폼:
 
 ```
 Golang
@@ -59,21 +59,21 @@ Golang
 GCC
 ```
 
-#### MacOS：
+#### MacOS:
 
 ```
 brew install go
 ```
 
-Xcode 命令行工具；<br>
-并在隐私设置中，于以下位置添加“屏幕录制”和“辅助功能”权限：<br>
-`系统设置 > 隐私与安全性 > 辅助功能、屏幕与系统音频录制`。
+Xcode 명령줄 도구; <br>
+그리고 개인정보 보호 설정에서 다음 위치에 "화면 기록"과 "손쉬운 사용" 권한을 추가하세요: <br>
+`시스템 설정 > 개인정보 보호 및 보안 > 손쉬운 사용, 화면 및 시스템 오디오 기록`.
 
 ```
 xcode-select --install
 ```
 
-#### Windows：
+#### Windows:
 
 ```
 winget install Golang.go
@@ -85,32 +85,32 @@ winget install Golang.go
 winget install MartinStorsjo.LLVM-MinGW.UCRT
 ```
 
-或者 [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files)
+또는 [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files)
 
 ```
 winget install BrechtSanders.WinLibs.POSIX.UCRT
 ```
 
-或者下载 [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files) 以及其他 gcc，然后将类似 `C:\mingw64\bin` 的路径设置到系统环境变量 `Path` 中。
-[设置环境变量以便从命令行运行 GCC](https://www.youtube.com/results?search_query=Set+environment+variables+to+run+GCC+from+command+line)。
+또는 [Mingw-w64](https://sourceforge.net/projects/mingw-w64/files)와 다른 gcc를 다운로드한 다음, `C:\mingw64\bin`과 같은 경로를 시스템 환경 변수 `Path`에 설정하세요.
+[명령줄에서 GCC를 실행하도록 환경 변수 설정하기](https://www.youtube.com/results?search_query=Set+environment+variables+to+run+GCC+from+command+line).
 
-`或者使用其他 GCC`（除 Mingw-w64 之外，使用 [bitmap](https://github.com/vcaesar/bitmap) 时你需要自行编译 “libpng”。）
+`또는 다른 GCC 사용`(Mingw-w64를 제외하고, [bitmap](https://github.com/vcaesar/bitmap)을 사용할 때는 "libpng"를 직접 컴파일해야 합니다.)
 
-#### 其他所有平台：
+#### 그 외 모든 플랫폼:
 
 ```
 GCC
 
-带 XTest 扩展的 X11（即 Xtst 库）
+XTest 확장이 포함된 X11 (즉 Xtst 라이브러리)
 
-“剪贴板”：xsel xclip
+"클립보드": xsel xclip
 
-“位图”：libpng（仅 “bitmap” 使用。）
+"비트맵": libpng (오직 "bitmap"에서만 사용.)
 
-“事件-Gohook”：xcb, xkb, libxkbcommon（仅 “hook” 使用。）
+"이벤트-Gohook": xcb, xkb, libxkbcommon (오직 "hook"에서만 사용.)
 ```
 
-##### Ubuntu：
+##### Ubuntu:
 
 ```yml
 # sudo apt install golang
@@ -132,7 +132,7 @@ sudo apt install libpng++-dev
 sudo apt install xcb libxcb-xkb-dev x11-xkb-utils libx11-xcb-dev libxkbcommon-x11-dev libxkbcommon-dev
 ```
 
-##### Fedora：
+##### Fedora:
 
 ```yml
 # x11
@@ -150,19 +150,19 @@ sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xorg-x11-xkb-utils-de
 
 ## Installation:
 
-在支持 Go module 的情况下（Go 1.11+），只需 import：
+Go 모듈을 지원하는 경우(Go 1.11+), import만 하면 됩니다:
 
 ```go
 import "github.com/go-vgo/robotgo"
 ```
 
-否则，运行以下命令安装 robotgo 包：
+그렇지 않으면 다음 명령을 실행하여 robotgo 패키지를 설치하세요:
 
 ```
 go get github.com/go-vgo/robotgo
 ```
 
-png.h: No such file or directory？请参阅 [issues/47](https://github.com/go-vgo/robotgo/issues/47)。
+png.h: No such file or directory? [issues/47](https://github.com/go-vgo/robotgo/issues/47)을 참조하세요.
 
 ## Update:
 
@@ -170,12 +170,12 @@ png.h: No such file or directory？请参阅 [issues/47](https://github.com/go-v
 go get -u github.com/go-vgo/robotgo
 ```
 
-注意 go1.10.x 的 C 文件编译缓存问题，[golang #24355](https://github.com/golang/go/issues/24355)。
-`go mod vendor` 问题，[golang #26366](https://github.com/golang/go/issues/26366)。
+go1.10.x의 C 파일 컴파일 캐시 문제에 주의하세요, [golang #24355](https://github.com/golang/go/issues/24355).
+`go mod vendor` 문제, [golang #26366](https://github.com/golang/go/issues/26366).
 
 ## [Examples:](https://github.com/go-vgo/robotgo/blob/master/examples)
 
-#### [鼠标](https://github.com/go-vgo/robotgo/blob/master/examples/mouse/main.go)
+#### [마우스](https://github.com/go-vgo/robotgo/blob/master/examples/mouse/main.go)
 
 ```Go
 package main
@@ -217,7 +217,7 @@ func main() {
 }
 ```
 
-#### [键盘](https://github.com/go-vgo/robotgo/blob/master/examples/key/main.go)
+#### [키보드](https://github.com/go-vgo/robotgo/blob/master/examples/key/main.go)
 
 ```Go
 package main
@@ -260,7 +260,7 @@ func main() {
 }
 ```
 
-#### [屏幕](https://github.com/go-vgo/robotgo/blob/master/examples/screen/main.go)
+#### [화면](https://github.com/go-vgo/robotgo/blob/master/examples/screen/main.go)
 
 ```Go
 package main
@@ -308,7 +308,7 @@ func main() {
 }
 ```
 
-#### [位图](https://github.com/vcaesar/bitmap/blob/main/examples/main.go)
+#### [비트맵](https://github.com/vcaesar/bitmap/blob/main/examples/main.go)
 
 ```Go
 package main
@@ -408,7 +408,7 @@ func opencv() {
 }
 ```
 
-#### [事件](https://github.com/robotn/gohook/blob/master/examples/main.go)
+#### [이벤트](https://github.com/robotn/gohook/blob/master/examples/main.go)
 
 ```Go
 package main
@@ -469,7 +469,7 @@ func event() {
 }
 ```
 
-#### [窗口](https://github.com/go-vgo/robotgo/blob/master/examples/window/main.go)
+#### [윈도우](https://github.com/go-vgo/robotgo/blob/master/examples/window/main.go)
 
 ```Go
 package main
@@ -519,24 +519,24 @@ func main() {
 
 ## Authors
 
-- [作者 Evans](https://github.com/vcaesar)
-- [维护者](https://github.com/orgs/go-vgo/people)
+- [작성자 Evans](https://github.com/vcaesar)
+- [관리자](https://github.com/orgs/go-vgo/people)
 
 ## Plans
 
-- 将部分 C 代码重构为 Go（例如 x11、windows）
-- 更好的多屏支持
-- Wayland 支持
-- 更新窗口句柄
-- 尝试支持 Android 和 iOS
+- 일부 C 코드를 Go로 리팩터링 (예: x11, windows)
+- 더 나은 멀티 스크린 지원
+- Wayland 지원
+- 윈도우 핸들 업데이트
+- Android 및 iOS 지원 시도
 
 ## Contributors
 
-- 完整的贡献者列表请见[贡献者页面](https://github.com/go-vgo/robotgo/graphs/contributors)。
-- 请参阅[贡献指南](https://github.com/go-vgo/robotgo/blob/master/CONTRIBUTING.md)。
+- 전체 기여자 목록은 [기여자 페이지](https://github.com/go-vgo/robotgo/graphs/contributors)를 참조하세요.
+- [기여 가이드라인](https://github.com/go-vgo/robotgo/blob/master/CONTRIBUTING.md)을 참조하세요.
 
 ## License
 
-Robotgo 主要依据 “Apache License (Version 2.0)” 的条款进行分发，部分内容受各类 BSD 风格许可证约束。
+Robotgo는 주로 "the Apache License (Version 2.0)" 조건에 따라 배포되며, 일부 내용은 다양한 BSD 계열 라이선스의 적용을 받습니다.
 
-详见 [LICENSE-APACHE](http://www.apache.org/licenses/LICENSE-2.0)、[LICENSE](https://github.com/go-vgo/robotgo/blob/master/LICENSE)。
+[LICENSE-APACHE](http://www.apache.org/licenses/LICENSE-2.0), [LICENSE](https://github.com/go-vgo/robotgo/blob/master/LICENSE)를 참조하세요.
