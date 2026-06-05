@@ -12,7 +12,7 @@
 > Golang 데스크톱 자동화, 자동 테스트 및 AI 컴퓨터 사용(Computer Use). <br>
 > 마우스와 키보드 제어, 화면 읽기, 프로세스, 윈도우 핸들, 이미지와 비트맵, 그리고 전역 이벤트 리스너.
 
-RobotGo는 Mac, Windows, Linux (X11)를 지원하며, arm64와 x86-amd64 아키텍처도 지원합니다.
+RobotGo는 Mac, Windows, Linux를 지원하며, arm64와 x86-amd64 아키텍처도 지원합니다.
 
 저는 지금 [Codg](https://github.com/vcaesar/codg)를 만들고 있습니다. 간편하게 코딩하고 작업할 수 있는 AI 에이전트(Agent) 시스템으로, 자동화, 비동기, 동시성, 고효율 그리고 높은 정확도를 갖추고 있습니다.
 

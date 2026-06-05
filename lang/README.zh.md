@@ -12,7 +12,7 @@
 > Golang 桌面自动化、自动测试以及 AI 计算机操作（Computer Use）。<br>
 > 控制鼠标、键盘，读取屏幕，进程、窗口句柄、图像与位图，以及全局事件监听。
 
-RobotGo 支持 Mac、Windows 和 Linux (X11)；并且支持 arm64 与 x86-amd64 架构。
+RobotGo 支持 Mac、Windows 和 Linux；并且支持 arm64 与 x86-amd64 架构。
 
 我正在打造 [Codg](https://github.com/vcaesar/codg)，一个简单易用的 AI 智能体（Agent）工作系统：自动化、异步、并发、高效且高准确度。
 
