@@ -1,6 +1,6 @@
 # RobotGo
 
-Go native cross-platform desktop automation: mouse, keyboard, screen, bitmap, process, window handle, clipboard, and global event listener. Supports macOS, Windows, Linux (X11); amd64 and arm64.
+Go native cross-platform desktop automation: mouse, keyboard, screen, bitmap, process, window handle, clipboard, and global event listener. Supports macOS, Windows, Linux; amd64 and arm64.
 
 Module: `github.com/go-vgo/robotgo` — Go 1.24 (CI pins Go 1.25 / 1.26).
 
@@ -31,7 +31,7 @@ robotgo/
 ├── robotgo_mac_unix.go     # //go:build darwin || linux
 ├── robotgo_mac_win.go      # //go:build darwin || windows
 ├── robotgo_win.go          # //go:build windows
-├── robotgo_x11.go          # //go:build linux (X11)
+├── robotgo_x11.go          # //go:build linux
 ├── robotgo_android.go, robotgo_adb.go
 ├── wayland_n.go, windows_n.go
 ├── key.go, keycode.go, screen.go, img.go, ps.go
