@@ -22,7 +22,7 @@ RobotGo поддерживает Mac, Windows и Linux (X11); а также по
 </a>
 </p>
 
-[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) предоставляет версии на JavaScript, Python, Lua и других языках, техническую поддержку, новые возможности, а также новейшую версию robotgo (например, поддержка Wayland, «сейчас нет версии с открытым исходным кодом»).
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) предоставляет версии на JavaScript, Python, Lua и других языках, техническую поддержку, новые возможности, а также новейшую версию robotgo («сейчас нет версии с открытым исходным кодом»).
 
 ## Содержание
 
@@ -31,6 +31,7 @@ RobotGo поддерживает Mac, Windows и Linux (X11); а также по
 - [Требования](#requirements)
 - [Установка](#installation)
 - [Обновление](#update)
+- [Сборки без Cgo](#cgo-free-builds)
 - [Примеры](#examples)
 - [Преобразование типов и клавиши](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
 - [Кросс-компиляция](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
@@ -145,8 +146,39 @@ sudo dnf install xsel xclip
 sudo dnf install libpng-devel
 
 # GoHook
-sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xorg-x11-xkb-utils-devel
+sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xkbcomp-devel
+xorg-x11-xkb-utils-devel (< Fedora 34)
 ```
+
+#### Wayland
+
+Бэкенд Wayland — это **чистая реализация на Go (без Cgo)**, поэтому системные
+C-библиотеки не требуются. Он требует композитора на основе wlroots (Sway,
+Hyprland, Wayfire и др.), поддерживающего следующие протоколы:
+
+```
+zwlr_virtual_pointer_v1            (управление мышью)
+zwp_virtual_keyboard_v1            (управление клавиатурой)
+zwlr_screencopy_v1                 (захват экрана)
+zwlr_foreign_toplevel_management_v1 (управление окнами)
+```
+
+GNOME и KDE **не** поддерживают эти протоколы нативно.
+
+#### libei (GNOME / KDE)
+
+Бэкенд libei также является **чистой реализацией на Go (без Cgo)**. Он
+управляет вводом через интерфейс RemoteDesktop из `xdg-desktop-portal`
+freedesktop, поэтому работает на GNOME и KDE (в отличие от wlroots Wayland
+бэкенда). Он требует:
+
+```
+xdg-desktop-portal               (D-Bus-служба portal)
+xdg-desktop-portal-gnome / -kde  (portal-бэкенд вашего рабочего стола)
+```
+
+Примечание: бэкенд libei обрабатывает только ввод с мыши и клавиатуры. Захват
+экрана и управление окнами возвращают `ErrNotSupported`.
 
 ## Installation:
 
@@ -172,6 +204,36 @@ go get -u github.com/go-vgo/robotgo
 
 Обратите внимание на проблему кэширования компиляции C-файлов в go1.10.x, [golang #24355](https://github.com/golang/go/issues/24355).
 Проблема `go mod vendor`, [golang #26366](https://github.com/golang/go/issues/26366).
+
+## Cgo-free Builds:
+
+RobotGo предоставляет **чистые Go-бэкенды (без Cgo)** для Windows, Wayland и
+libei (Linux). Они предоставляют тот же API `robotgo`, поэтому ваш код не нуждается в
+изменениях — достаточно тега сборки. Эти бэкенды кросс-компилируются с
+`CGO_ENABLED=0` (без GCC, MinGW или заголовков X11).
+
+| Бэкенд                          | Тег сборки | Go-пакет                            |
+| ------------------------------- | ---------- | ----------------------------------- |
+| Windows (без Cgo)               | `win`      | `github.com/go-vgo/robotgo/win`     |
+| Wayland (Linux, wlroots)        | `wayland`  | `github.com/go-vgo/robotgo/wayland` |
+| libei (Linux, portal GNOME/KDE) | `libei`    | `github.com/go-vgo/robotgo/libei`   |
+
+```sh
+# Windows, без Cgo / без MinGW
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -tags win ./...
+
+# Wayland, композитор на основе wlroots (Sway, Hyprland, Wayfire и др.)
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags wayland ./...
+
+# libei, GNOME/KDE через xdg-desktop-portal RemoteDesktop
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags libei ./...
+```
+
+С тегом `win` бэкенд Cgo/Win32 по умолчанию исключается, а вызовы
+перенаправляются в чистый Go-пакет `win`; с тегом `wayland` исключается бэкенд
+Cgo/X11, а вызовы перенаправляются в чистый Go-пакет `wayland`; с тегом `libei`
+исключаются как бэкенд Cgo/X11, так и wlroots Wayland бэкенд, а вызовы
+перенаправляются в чистый Go-пакет `libei`.
 
 ## [Examples:](https://github.com/go-vgo/robotgo/blob/master/examples)
 
