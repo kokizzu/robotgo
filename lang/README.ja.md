@@ -22,7 +22,7 @@ RobotGo は Mac、Windows、Linux (X11) に対応しており、arm64 および 
 </a>
 </p>
 
-[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) では、JavaScript、Python、Lua などの他言語版、テクニカルサポート、新機能、そして最新の robotgo バージョン（Wayland 対応など、「現在オープンソース版はありません」）を入手できます。
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) では、JavaScript、Python、Lua などの他言語版、テクニカルサポート、新機能、そして最新の robotgo バージョン（「現在オープンソース版はありません」）を入手できます。
 
 ## 目次
 
@@ -31,6 +31,7 @@ RobotGo は Mac、Windows、Linux (X11) に対応しており、arm64 および 
 - [動作環境](#requirements)
 - [インストール](#installation)
 - [アップデート](#update)
+- [Cgo 不要ビルド](#cgo-free-builds)
 - [サンプル](#examples)
 - [型変換とキー](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
 - [クロスコンパイル](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
@@ -145,8 +146,38 @@ sudo dnf install xsel xclip
 sudo dnf install libpng-devel
 
 # GoHook
-sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xorg-x11-xkb-utils-devel
+sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xkbcomp-devel
+xorg-x11-xkb-utils-devel (< Fedora 34)
 ```
+
+#### Wayland
+
+Wayland バックエンドは **純粋 Go（Cgo 不要）** 実装なので、システムの C ライブラリは
+一切必要ありません。以下のプロトコルをサポートする wlroots ベースのコンポジッタ
+（Sway、Hyprland、Wayfire など）が必要です：
+
+```
+zwlr_virtual_pointer_v1            (マウス制御)
+zwp_virtual_keyboard_v1            (キーボード制御)
+zwlr_screencopy_v1                 (画面キャプチャ)
+zwlr_foreign_toplevel_management_v1 (ウィンドウ管理)
+```
+
+GNOME と KDE はこれらのプロトコルをネイティブにはサポートしていません。
+
+#### libei（GNOME / KDE）
+
+libei バックエンドも **純粋 Go（Cgo 不要）** 実装です。freedesktop の
+`xdg-desktop-portal` RemoteDesktop インターフェースを介して入力を駆動するため、
+wlroots Wayland バックエンドとは異なり GNOME と KDE で動作します。以下が必要です：
+
+```
+xdg-desktop-portal               (portal D-Bus サービス)
+xdg-desktop-portal-gnome / -kde  (お使いのデスクトップの portal バックエンド)
+```
+
+注意：libei バックエンドはマウスとキーボード入力のみを処理します。画面キャプチャと
+ウィンドウ管理は `ErrNotSupported` を返します。
 
 ## Installation:
 
@@ -172,6 +203,35 @@ go get -u github.com/go-vgo/robotgo
 
 go1.10.x の C ファイルコンパイルキャッシュ問題に注意してください。[golang #24355](https://github.com/golang/go/issues/24355)。
 `go mod vendor` の問題、[golang #26366](https://github.com/golang/go/issues/26366)。
+
+## Cgo-free Builds:
+
+RobotGo は Windows、Wayland、libei（Linux）向けに **純粋 Go（Cgo 不要）** バックエンドを
+提供します。これらは同じ `robotgo` API を公開するため、コードの変更は不要で、
+ビルドタグを指定するだけです。これらのバックエンドは `CGO_ENABLED=0` でクロスコンパイル
+できます（GCC、MinGW、X11 ヘッダー不要）。
+
+| バックエンド                     | ビルドタグ | Go パッケージ                       |
+| -------------------------------- | ---------- | ----------------------------------- |
+| Windows（Cgo 不要）              | `win`      | `github.com/go-vgo/robotgo/win`     |
+| Wayland（Linux、wlroots）        | `wayland`  | `github.com/go-vgo/robotgo/wayland` |
+| libei（Linux、GNOME/KDE portal） | `libei`    | `github.com/go-vgo/robotgo/libei`   |
+
+```sh
+# Windows、Cgo / MinGW 不要
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -tags win ./...
+
+# Wayland、wlroots ベースのコンポジッタ（Sway、Hyprland、Wayfire など）
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags wayland ./...
+
+# libei、xdg-desktop-portal RemoteDesktop 経由で GNOME/KDE に対応
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags libei ./...
+```
+
+`win` タグではデフォルトの Cgo/Win32 バックエンドが除外され、呼び出しは純粋 Go の `win`
+パッケージに転送されます。`wayland` タグでは Cgo/X11 バックエンドが除外され、呼び出しは
+純粋 Go の `wayland` パッケージに転送されます。`libei` タグでは Cgo/X11 と wlroots Wayland
+バックエンドの両方が除外され、呼び出しは純粋 Go の `libei` パッケージに転送されます。
 
 ## [Examples:](https://github.com/go-vgo/robotgo/blob/master/examples)
 

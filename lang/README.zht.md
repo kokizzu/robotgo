@@ -22,7 +22,7 @@ RobotGo 支援 Mac、Windows 和 Linux (X11)；並且支援 arm64 與 x86-amd64 
 </a>
 </p>
 
-[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) 提供 JavaScript、Python、Lua 等其他語言版本、技術支援、新功能以及最新的 robotgo 版本（例如 Wayland 支援，「目前無開源版本」）。
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) 提供 JavaScript、Python、Lua 等其他語言版本、技術支援、新功能以及最新的 robotgo 版本（「目前無開源版本」）。
 
 ## 目錄
 
@@ -31,6 +31,7 @@ RobotGo 支援 Mac、Windows 和 Linux (X11)；並且支援 arm64 與 x86-amd64 
 - [環境需求](#requirements)
 - [安裝](#installation)
 - [更新](#update)
+- [無 Cgo 構建](#cgo-free-builds)
 - [範例](#examples)
 - [型別轉換與按鍵](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
 - [交叉編譯](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
@@ -145,8 +146,36 @@ sudo dnf install xsel xclip
 sudo dnf install libpng-devel
 
 # GoHook
-sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xorg-x11-xkb-utils-devel
+sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xkbcomp-devel
+xorg-x11-xkb-utils-devel (< Fedora 34)
 ```
+
+#### Wayland
+
+Wayland 後端是 **純 Go（無 Cgo）** 實作，因此無需任何系統 C 函式庫。它需要一個
+基於 wlroots 的合成器（Sway、Hyprland、Wayfire 等），並支援以下協定：
+
+```
+zwlr_virtual_pointer_v1            (滑鼠控制)
+zwp_virtual_keyboard_v1            (鍵盤控制)
+zwlr_screencopy_v1                 (螢幕擷取)
+zwlr_foreign_toplevel_management_v1 (視窗管理)
+```
+
+GNOME 和 KDE **不**原生支援這些協定。
+
+#### libei（GNOME / KDE）
+
+libei 後端同樣是 **純 Go（無 Cgo）** 實作。它透過 freedesktop 的
+`xdg-desktop-portal` RemoteDesktop 介面驅動輸入，因此可在 GNOME 和 KDE 上運作
+（不同於 wlroots Wayland 後端）。它需要：
+
+```
+xdg-desktop-portal               (portal D-Bus 服務)
+xdg-desktop-portal-gnome / -kde  (你桌面的 portal 後端)
+```
+
+注意：libei 後端僅處理滑鼠和鍵盤輸入。螢幕擷取和視窗管理會返回 `ErrNotSupported`。
 
 ## Installation:
 
@@ -172,6 +201,33 @@ go get -u github.com/go-vgo/robotgo
 
 注意 go1.10.x 的 C 檔案編譯快取問題，[golang #24355](https://github.com/golang/go/issues/24355)。
 `go mod vendor` 問題，[golang #26366](https://github.com/golang/go/issues/26366)。
+
+## Cgo-free Builds:
+
+RobotGo 為 Windows、Wayland 和 libei（Linux）提供了 **純 Go（無 Cgo）** 後端。
+它們暴露相同的 `robotgo` API，因此你的程式碼無需改動 —— 只需一個構建標籤。
+這些後端可在 `CGO_ENABLED=0` 下交叉編譯（無需 GCC、MinGW 或 X11 頭檔案）。
+
+| 後端                             | 構建標籤  | Go 套件                             |
+| -------------------------------- | --------- | ----------------------------------- |
+| Windows（無 Cgo）                | `win`     | `github.com/go-vgo/robotgo/win`     |
+| Wayland（Linux，wlroots）        | `wayland` | `github.com/go-vgo/robotgo/wayland` |
+| libei（Linux，GNOME/KDE portal） | `libei`   | `github.com/go-vgo/robotgo/libei`   |
+
+```sh
+# Windows，無需 Cgo / 無需 MinGW
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -tags win ./...
+
+# Wayland，基於 wlroots 的合成器（Sway、Hyprland、Wayfire 等）
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags wayland ./...
+
+# libei，透過 xdg-desktop-portal RemoteDesktop 支援 GNOME/KDE
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags libei ./...
+```
+
+在 `win` 標籤下，預設的 Cgo/Win32 後端被排除，呼叫轉發到純 Go 的 `win` 套件；
+在 `wayland` 標籤下，Cgo/X11 後端被排除，呼叫轉發到純 Go 的 `wayland` 套件；
+在 `libei` 標籤下，Cgo/X11 和 wlroots Wayland 後端均被排除，呼叫轉發到純 Go 的 `libei` 套件。
 
 ## [Examples:](https://github.com/go-vgo/robotgo/blob/master/examples)
 

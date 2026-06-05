@@ -22,7 +22,7 @@ Je développe actuellement [Codg](https://github.com/vcaesar/codg), un système 
 </a>
 </p>
 
-[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) propose les versions JavaScript, Python, Lua et d'autres langages, le support technique, de nouvelles fonctionnalités ainsi que la toute dernière version de robotgo (comme la prise en charge de Wayland, « aucune version open source pour le moment »).
+[RobotGo-Pro](https://github.com/vcaesar/robotgo-pro) propose les versions JavaScript, Python, Lua et d'autres langages, le support technique, de nouvelles fonctionnalités ainsi que la toute dernière version de robotgo (« aucune version open source pour le moment »).
 
 ## Sommaire
 
@@ -31,6 +31,7 @@ Je développe actuellement [Codg](https://github.com/vcaesar/codg), un système 
 - [Prérequis](#requirements)
 - [Installation](#installation)
 - [Mise à jour](#update)
+- [Builds sans Cgo](#cgo-free-builds)
 - [Exemples](#examples)
 - [Conversion de types et touches](https://github.com/go-vgo/robotgo/blob/master/docs/keys.md)
 - [Compilation croisée](https://github.com/go-vgo/robotgo/blob/master/docs/install.md#crosscompiling)
@@ -145,8 +146,39 @@ sudo dnf install xsel xclip
 sudo dnf install libpng-devel
 
 # GoHook
-sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xorg-x11-xkb-utils-devel
+sudo dnf install libxkbcommon-devel libxkbcommon-x11-devel xkbcomp-devel
+xorg-x11-xkb-utils-devel (< Fedora 34)
 ```
+
+#### Wayland
+
+Le backend Wayland est une implémentation **100 % Go (sans Cgo)**, aucune
+bibliothèque C système n'est donc requise. Il nécessite un compositeur basé sur
+wlroots (Sway, Hyprland, Wayfire, ...) prenant en charge les protocoles suivants :
+
+```
+zwlr_virtual_pointer_v1            (contrôle de la souris)
+zwp_virtual_keyboard_v1            (contrôle du clavier)
+zwlr_screencopy_v1                 (capture d'écran)
+zwlr_foreign_toplevel_management_v1 (gestion des fenêtres)
+```
+
+GNOME et KDE ne prennent **pas** en charge ces protocoles nativement.
+
+#### libei (GNOME / KDE)
+
+Le backend libei est également une implémentation **100 % Go (sans Cgo)**. Il
+pilote les entrées via l'interface RemoteDesktop de `xdg-desktop-portal` de
+freedesktop, il fonctionne donc sur GNOME et KDE (contrairement au backend
+Wayland wlroots). Il nécessite :
+
+```
+xdg-desktop-portal               (le service D-Bus du portail)
+xdg-desktop-portal-gnome / -kde  (le backend de portail de votre bureau)
+```
+
+Remarque : le backend libei ne gère que les entrées souris et clavier. La capture
+d'écran et la gestion des fenêtres renvoient `ErrNotSupported`.
 
 ## Installation:
 
@@ -172,6 +204,36 @@ go get -u github.com/go-vgo/robotgo
 
 Notez le problème de cache de compilation des fichiers C de go1.10.x, [golang #24355](https://github.com/golang/go/issues/24355).
 Problème de `go mod vendor`, [golang #26366](https://github.com/golang/go/issues/26366).
+
+## Cgo-free Builds:
+
+RobotGo fournit des backends **100 % Go (sans Cgo)** pour Windows, Wayland et
+libei (Linux). Ils exposent la même API `robotgo`, votre code n'a donc pas besoin
+d'être modifié — il suffit d'un tag de build. Ces backends se compilent en
+cross-compilation avec `CGO_ENABLED=0` (sans GCC, MinGW ni en-têtes X11).
+
+| Backend                          | Tag de build | Paquet Go                           |
+| -------------------------------- | ------------ | ----------------------------------- |
+| Windows (sans Cgo)               | `win`        | `github.com/go-vgo/robotgo/win`     |
+| Wayland (Linux, wlroots)         | `wayland`    | `github.com/go-vgo/robotgo/wayland` |
+| libei (Linux, portail GNOME/KDE) | `libei`      | `github.com/go-vgo/robotgo/libei`   |
+
+```sh
+# Windows, sans Cgo / sans MinGW
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -tags win ./...
+
+# Wayland, compositeur basé sur wlroots (Sway, Hyprland, Wayfire, ...)
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags wayland ./...
+
+# libei, GNOME/KDE via l'interface RemoteDesktop de xdg-desktop-portal
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags libei ./...
+```
+
+Avec le tag `win`, le backend Cgo/Win32 par défaut est exclu et les appels sont
+redirigés vers le paquet Go pur `win` ; avec le tag `wayland`, le backend Cgo/X11
+est exclu et les appels sont redirigés vers le paquet Go pur `wayland` ; avec le
+tag `libei`, les backends Cgo/X11 et Wayland wlroots sont tous deux exclus et les
+appels sont redirigés vers le paquet Go pur `libei`.
 
 ## [Examples:](https://github.com/go-vgo/robotgo/blob/master/examples)
 
