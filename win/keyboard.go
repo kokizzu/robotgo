@@ -77,12 +77,12 @@ const (
 	Ctrl     = "ctrl"
 	Alt      = "alt"
 	Cmd      = "cmd"
-	Lshift   = "lshift"
-	Rshift   = "rshift"
-	Lctrl    = "lctrl"
-	Rctrl    = "rctrl"
-	Lalt     = "lalt"
-	Ralt     = "ralt"
+	ShiftL   = "shiftl"
+	ShiftR   = "shiftr"
+	CtrlL    = "ctrll"
+	CtrlR    = "ctrlr"
+	AltL     = "altl"
+	AltR     = "altr"
 	Space    = "space"
 	Capslock = "capslock"
 	Print    = "print"
@@ -102,12 +102,12 @@ var vkMap = map[string]uint16{
 	"pagedown": win.VK_NEXT, "pgdn": win.VK_NEXT,
 	"insert": win.VK_INSERT,
 
-	"shift": win.VK_SHIFT, "lshift": win.VK_LSHIFT, "rshift": win.VK_RSHIFT,
+	"shift": win.VK_SHIFT, "shiftl": win.VK_LSHIFT, "shiftr": win.VK_RSHIFT,
 	"ctrl": win.VK_CONTROL, "control": win.VK_CONTROL,
-	"lctrl": win.VK_LCONTROL, "rctrl": win.VK_RCONTROL,
-	"alt": win.VK_MENU, "lalt": win.VK_LMENU, "ralt": win.VK_RMENU,
-	"cmd": win.VK_LWIN, "lcmd": win.VK_LWIN, "win": win.VK_LWIN,
-	"rcmd": win.VK_RWIN, "rwin": win.VK_RWIN,
+	"ctrll": win.VK_LCONTROL, "ctrlr": win.VK_RCONTROL,
+	"alt": win.VK_MENU, "altl": win.VK_LMENU, "altr": win.VK_RMENU,
+	"cmd": win.VK_LWIN, "cmdl": win.VK_LWIN, "win": win.VK_LWIN,
+	"cmdr": win.VK_RWIN, "rwin": win.VK_RWIN,
 	"capslock": win.VK_CAPITAL,
 	"print":    win.VK_SNAPSHOT, "printscreen": win.VK_SNAPSHOT,
 	"menu":     win.VK_APPS,
@@ -322,10 +322,10 @@ func extractModifiers(args []interface{}) []string {
 	for _, arg := range args {
 		if s, ok := arg.(string); ok {
 			switch s {
-			case "ctrl", "control", "lctrl", "rctrl",
-				"shift", "lshift", "rshift",
-				"alt", "lalt", "ralt",
-				"cmd", "lcmd", "rcmd", "win", "rwin":
+			case "ctrl", "control", "ctrll", "ctrlr",
+				"shift", "shiftl", "shiftr",
+				"alt", "altl", "altr",
+				"cmd", "cmdl", "cmdr", "win", "rwin":
 				mods = append(mods, s)
 			}
 		}

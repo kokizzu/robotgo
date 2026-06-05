@@ -41,10 +41,10 @@ var evdevKeyMap = map[string]uint32{
 	",": 51, ".": 52, "/": 53,
 
 	// Modifiers
-	"lshift": 42, "rshift": 54, "shift": 42,
-	"lctrl": 29, "rctrl": 97, "ctrl": 29, "control": 29,
-	"lalt": 56, "ralt": 100, "alt": 56,
-	"cmd": 125, "lcmd": 125, "rcmd": 126, // KEY_LEFTMETA / KEY_RIGHTMETA
+	"shiftl": 42, "shiftr": 54, "shift": 42,
+	"ctrll": 29, "ctrlr": 97, "ctrl": 29, "control": 29,
+	"altl": 56, "altr": 100, "alt": 56,
+	"cmd": 125, "cmdl": 125, "cmdr": 126, // KEY_LEFTMETA / KEY_RIGHTMETA
 	"space":    57,
 	"capslock": 58,
 

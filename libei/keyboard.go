@@ -73,12 +73,12 @@ const (
 	Ctrl     = "ctrl"
 	Alt      = "alt"
 	Cmd      = "cmd"
-	Lshift   = "lshift"
-	Rshift   = "rshift"
-	Lctrl    = "lctrl"
-	Rctrl    = "rctrl"
-	Lalt     = "lalt"
-	Ralt     = "ralt"
+	ShiftL   = "shiftl"
+	ShiftR   = "shiftr"
+	CtrlL    = "ctrll"
+	CtrlR    = "ctrlr"
+	AltL     = "altl"
+	AltR     = "altr"
 	Space    = "space"
 	Capslock = "capslock"
 	Print    = "print"
@@ -231,13 +231,13 @@ func extractModifiers(args []interface{}) []string {
 	for _, arg := range args {
 		if s, ok := arg.(string); ok {
 			switch s {
-			case "ctrl", "control", "lctrl", "rctrl":
+			case "ctrl", "control", "ctrll", "ctrlr":
 				mods = append(mods, s)
-			case "shift", "lshift", "rshift":
+			case "shift", "shiftl", "shiftr":
 				mods = append(mods, s)
-			case "alt", "lalt", "ralt":
+			case "alt", "altl", "altr":
 				mods = append(mods, s)
-			case "cmd", "lcmd", "rcmd":
+			case "cmd", "cmdl", "cmdr":
 				mods = append(mods, s)
 			}
 		}

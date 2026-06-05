@@ -1,3 +1,6 @@
+//go:build !wayland && !win && !libei
+// +build !wayland,!win,!libei
+
 // Copyright (c) 2016-2025 AtomAI, All rights reserved.
 //
 // See the COPYRIGHT file at the top-level directory of this distribution and at
@@ -378,6 +381,16 @@ func CaptureImg(args ...int) (image.Image, error) {
 	defer FreeBitmap(bit)
 
 	return ToImage(bit), nil
+}
+
+// SaveCapture capture screen and save the screenshot to image
+func SaveCapture(path string, args ...int) error {
+	img, err := CaptureImg(args...)
+	if err != nil {
+		return err
+	}
+
+	return Save(img, path)
 }
 
 // FreeBitmap free and dealloc the C bitmap
