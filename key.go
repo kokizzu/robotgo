@@ -1,7 +1,7 @@
 //go:build !wayland && !win && !libei
 // +build !wayland,!win,!libei
 
-// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+// Copyright (c) 2016-2026 AtomAI, All rights reserved.
 //
 // See the COPYRIGHT file at the top-level directory of this distribution and at
 // https://github.com/go-vgo/robotgo/blob/master/LICENSE
@@ -193,21 +193,21 @@ func checkKeyCodes(k string) (key C.MMKeyCode, err error) {
 
 func checkKeyFlags(f string) (flags C.MMKeyFlags) {
 	m := map[string]C.MMKeyFlags{
-		"alt":    C.MOD_ALT,
-		"altr":   C.MOD_ALT,
-		"altl":   C.MOD_ALT,
-		"cmd":    C.MOD_META,
-		"command":    C.MOD_META,
-		"cmdr":   C.MOD_META,
-		"cmdl":   C.MOD_META,
-		"ctrl":   C.MOD_CONTROL,
-		"control":   C.MOD_CONTROL,
-		"ctrlr":  C.MOD_CONTROL,
-		"ctrll":  C.MOD_CONTROL,
-		"shift":  C.MOD_SHIFT,
-		"shiftr": C.MOD_SHIFT,
-		"shiftl": C.MOD_SHIFT,
-		"none":   C.MOD_NONE,
+		"alt":     C.MOD_ALT,
+		"altr":    C.MOD_ALT,
+		"altl":    C.MOD_ALT,
+		"cmd":     C.MOD_META,
+		"command": C.MOD_META,
+		"cmdr":    C.MOD_META,
+		"cmdl":    C.MOD_META,
+		"ctrl":    C.MOD_CONTROL,
+		"control": C.MOD_CONTROL,
+		"ctrlr":   C.MOD_CONTROL,
+		"ctrll":   C.MOD_CONTROL,
+		"shift":   C.MOD_SHIFT,
+		"shiftr":  C.MOD_SHIFT,
+		"shiftl":  C.MOD_SHIFT,
+		"none":    C.MOD_NONE,
 	}
 
 	if v, ok := m[f]; ok {

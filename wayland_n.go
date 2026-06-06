@@ -1,7 +1,7 @@
 //go:build linux && wayland && !libei
 // +build linux,wayland,!libei
 
-// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+// Copyright (c) 2016-2026 AtomAI, All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0>

@@ -100,7 +100,7 @@ func ToStrings(fields []interface{}) []string {
 }
 
 // CmdCtrl If the operating system is macOS, return the key string "cmd",
-// otherwise return the key string "ctrl
+// otherwise return the key string "ctrl"
 func CmdCtrl() string {
 	if runtime.GOOS == "darwin" {
 		return "cmd"
