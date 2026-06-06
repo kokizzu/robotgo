@@ -53,9 +53,9 @@ func Capture(args ...int) (*image.RGBA, error) {
 	return screenshot.Capture(x, y, w, h)
 }
 
-// SaveCapture capture screen and save the screenshot to image
-func SaveCapture(path string, args ...int) error {
-	img, err := CaptureImg(args...)
+// SaveCaptureGo capture screen and save the screenshot to image
+func SaveCaptureGo(path string, args ...int) error {
+	img, err := Capture(args...)
 	if err != nil {
 		return err
 	}

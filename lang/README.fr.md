@@ -12,7 +12,7 @@
 > Automatisation de bureau en Golang, tests automatisés et utilisation de l'ordinateur par l'IA (Computer Use). <br>
 > Contrôlez la souris et le clavier, lisez l'écran, gérez les processus, les handles de fenêtre, les images et les bitmaps, ainsi que l'écoute globale des événements.
 
-RobotGo prend en charge Mac, Windows et Linux (X11) ; et robotgo prend en charge les architectures arm64 et x86-amd64.
+RobotGo prend en charge Mac, Windows et Linux ; et robotgo prend en charge les architectures arm64 et x86-amd64.
 
 Je développe actuellement [Codg](https://github.com/vcaesar/codg), un système de travail à base d'agents IA simple à utiliser : automatisé, asynchrone, concurrent, efficace et d'une grande précision.
 

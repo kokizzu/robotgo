@@ -12,7 +12,7 @@
 > Golang Desktop-Automatisierung, automatisiertes Testen und KI-gestützte Computer-Bedienung (Computer Use). <br>
 > Steuerung von Maus und Tastatur, Auslesen des Bildschirms, Prozesse, Fensterhandles, Bilder und Bitmaps sowie globales Event-Listening.
 
-RobotGo unterstützt Mac, Windows und Linux (X11); außerdem unterstützt RobotGo arm64 und x86-amd64.
+RobotGo unterstützt Mac, Windows und Linux; außerdem unterstützt RobotGo arm64 und x86-amd64.
 
 Ich entwickle jetzt [Codg](https://github.com/vcaesar/codg), ein einfach zu bedienendes KI-Agentensystem zum Programmieren und Arbeiten: automatisch, asynchron, nebenläufig, effizient und mit hoher Genauigkeit.
 

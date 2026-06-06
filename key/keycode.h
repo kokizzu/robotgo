@@ -70,6 +70,9 @@ enum _MMKeyCode {
 	// K_PRINTSCREEN = K_NOT_A_KEY,
 	K_PRINTSCREEN = kVK_F13,
 	K_MENU = K_NOT_A_KEY,
+	// macOS has no dedicated Scroll Lock / Pause virtual keycodes.
+	K_SCROLL_LOCK = K_NOT_A_KEY, // f14
+	K_PAUSE = K_NOT_A_KEY, // f15
 
 	K_NUMPAD_0 = kVK_ANSI_Keypad0,
 	K_NUMPAD_1 = kVK_ANSI_Keypad1,
@@ -184,6 +187,8 @@ enum _MMKeyCode {
 	K_INSERT = XK_Insert,
 	K_PRINTSCREEN = XK_Print,
 	K_MENU = K_NOT_A_KEY,
+	K_SCROLL_LOCK = XK_Scroll_Lock,
+	K_PAUSE = XK_Pause,
 
 	// K_NUMPAD_0 = K_NOT_A_KEY,
 	K_NUMPAD_0 = XK_KP_0,
@@ -213,9 +218,6 @@ enum _MMKeyCode {
 	K_Quote			 = XK_apostrophe,
 	K_Slash			 = XK_slash,
 	K_Grave			 = XK_grave,
-
-	K_SCROLL_LOCK = XK_Scroll_Lock,
-	K_PAUSE = XK_Pause,
 
 	K_AUDIO_VOLUME_MUTE = XF86XK_AudioMute,
 	K_AUDIO_VOLUME_DOWN = XF86XK_AudioLowerVolume,
@@ -346,6 +348,8 @@ enum _MMKeyCode {
 	K_PRINTSCREEN = VK_SNAPSHOT,
 	K_INSERT = VK_INSERT,
 	K_MENU = VK_APPS,
+	K_SCROLL_LOCK = VK_SCROLL,
+	K_PAUSE = VK_PAUSE,
 
 	K_NUMPAD_0 = VK_NUMPAD0,
 	K_NUMPAD_1 = VK_NUMPAD1,
@@ -374,9 +378,6 @@ enum _MMKeyCode {
 	K_Quote		 	 = VK_OEM_7,
 	K_Slash			 = VK_OEM_2,
 	K_Grave			 = VK_OEM_3,
-
-	K_SCROLL_LOCK = VK_SCROLL,
-	K_PAUSE = VK_PAUSE,
 
 	K_AUDIO_VOLUME_MUTE = VK_VOLUME_MUTE,
 	K_AUDIO_VOLUME_DOWN = VK_VOLUME_DOWN,

@@ -15,7 +15,7 @@ English | [简体中文](lang/README.zh.md) | [繁體中文](lang/README.zht.md)
 > Golang Desktop Automation, auto test and AI Computer Use. <br>
 > Control the mouse, keyboard, read the screen, process, Window Handle, image and bitmap and global event listener.
 
-RobotGo supports Mac, Windows, and Linux (X11); and robotgo supports arm64 and x86-amd64.
+RobotGo supports Mac, Windows, and Linux; and robotgo supports arm64 and x86-amd64.
 
 I build [Codg](https://github.com/vcaesar/codg) now, Easy code and work AI agent system: auto, asynchronous, concurrency, efficiently and High accuracy
 

@@ -1,3 +1,6 @@
+//go:build !wayland && !win && !libei
+// +build !wayland,!win,!libei
+
 // Copyright (c) 2016-2025 AtomAI, All rights reserved.
 //
 // See the COPYRIGHT file at the top-level directory of this distribution and at
@@ -28,184 +31,6 @@ import (
 	"unsafe"
 
 	"github.com/go-vgo/robotgo/clipboard"
-)
-
-// Defining a bunch of constants.
-const (
-	// KeyA define key "a"
-	KeyA = "a"
-	KeyB = "b"
-	KeyC = "c"
-	KeyD = "d"
-	KeyE = "e"
-	KeyF = "f"
-	KeyG = "g"
-	KeyH = "h"
-	KeyI = "i"
-	KeyJ = "j"
-	KeyK = "k"
-	KeyL = "l"
-	KeyM = "m"
-	KeyN = "n"
-	KeyO = "o"
-	KeyP = "p"
-	KeyQ = "q"
-	KeyR = "r"
-	KeyS = "s"
-	KeyT = "t"
-	KeyU = "u"
-	KeyV = "v"
-	KeyW = "w"
-	KeyX = "x"
-	KeyY = "y"
-	KeyZ = "z"
-	//
-	CapA = "A"
-	CapB = "B"
-	CapC = "C"
-	CapD = "D"
-	CapE = "E"
-	CapF = "F"
-	CapG = "G"
-	CapH = "H"
-	CapI = "I"
-	CapJ = "J"
-	CapK = "K"
-	CapL = "L"
-	CapM = "M"
-	CapN = "N"
-	CapO = "O"
-	CapP = "P"
-	CapQ = "Q"
-	CapR = "R"
-	CapS = "S"
-	CapT = "T"
-	CapU = "U"
-	CapV = "V"
-	CapW = "W"
-	CapX = "X"
-	CapY = "Y"
-	CapZ = "Z"
-	//
-	Key0      = "0"
-	Key1      = "1"
-	Key2      = "2"
-	Key3      = "3"
-	Key4      = "4"
-	Key5      = "5"
-	Key6      = "6"
-	Key7      = "7"
-	Key8      = "8"
-	Key9      = "9"
-	KeyGrave  = "`"
-	KeyQuoter = '"'
-	KeyQuote  = "'"
-
-	// Backspace backspace key string
-	Backspace = "backspace"
-	Delete    = "delete"
-	Enter     = "enter"
-	Tab       = "tab"
-	Esc       = "esc"
-	Escape    = "escape"
-	Up        = "up"    // Up arrow key
-	Down      = "down"  // Down arrow key
-	Right     = "right" // Right arrow key
-	Left      = "left"  // Left arrow key
-	Home      = "home"
-	End       = "end"
-	Pageup    = "pageup"
-	Pagedown  = "pagedown"
-
-	F1  = "f1"
-	F2  = "f2"
-	F3  = "f3"
-	F4  = "f4"
-	F5  = "f5"
-	F6  = "f6"
-	F7  = "f7"
-	F8  = "f8"
-	F9  = "f9"
-	F10 = "f10"
-	F11 = "f11"
-	F12 = "f12"
-	F13 = "f13"
-	F14 = "f14"
-	F15 = "f15"
-	F16 = "f16"
-	F17 = "f17"
-	F18 = "f18"
-	F19 = "f19"
-	F20 = "f20"
-	F21 = "f21"
-	F22 = "f22"
-	F23 = "f23"
-	F24 = "f24"
-
-	Cmd  = "cmd"  // is the "win" key for windows
-	Lcmd = "lcmd" // left command
-	Rcmd = "rcmd" // right command
-	// "command"
-	Alt     = "alt"
-	Lalt    = "lalt" // left alt
-	Ralt    = "ralt" // right alt
-	Ctrl    = "ctrl"
-	Lctrl   = "lctrl" // left ctrl
-	Rctrl   = "rctrl" // right ctrl
-	Control = "control"
-	Shift   = "shift"
-	Lshift  = "lshift" // left shift
-	Rshift  = "rshift" // right shift
-	// "right_shift"
-	Capslock    = "capslock"
-	Space       = "space"
-	Print       = "print"
-	Printscreen = "printscreen" // No Mac support
-	Insert      = "insert"
-	Menu        = "menu" // Windows only
-
-	AudioMute    = "audio_mute"     // Mute the volume
-	AudioVolDown = "audio_vol_down" // Lower the volume
-	AudioVolUp   = "audio_vol_up"   // Increase the volume
-	AudioPlay    = "audio_play"
-	AudioStop    = "audio_stop"
-	AudioPause   = "audio_pause"
-	AudioPrev    = "audio_prev"    // Previous Track
-	AudioNext    = "audio_next"    // Next Track
-	AudioRewind  = "audio_rewind"  // Linux only
-	AudioForward = "audio_forward" // Linux only
-	AudioRepeat  = "audio_repeat"  //  Linux only
-	AudioRandom  = "audio_random"  //  Linux only
-
-	Num0    = "num0" // numpad 0
-	Num1    = "num1"
-	Num2    = "num2"
-	Num3    = "num3"
-	Num4    = "num4"
-	Num5    = "num5"
-	Num6    = "num6"
-	Num7    = "num7"
-	Num8    = "num8"
-	Num9    = "num9"
-	NumLock = "num_lock"
-
-	ScrollLock = "scroll_lock"
-	PauseBreak = "pause_break"
-
-	NumDecimal = "num."
-	NumPlus    = "num+"
-	NumMinus   = "num-"
-	NumMul     = "num*"
-	NumDiv     = "num/"
-	NumClear   = "num_clear"
-	NumEnter   = "num_enter"
-	NumEqual   = "num_equal"
-
-	LightsMonUp     = "lights_mon_up"     // Turn up monitor brightness			No Windows support
-	LightsMonDown   = "lights_mon_down"   // Turn down monitor brightness		No Windows support
-	LightsKbdToggle = "lights_kbd_toggle" // Toggle keyboard backlight on/off		No Windows support
-	LightsKbdUp     = "lights_kbd_up"     // Turn up keyboard backlight brightness	No Windows support
-	LightsKbdDown   = "lights_kbd_down"
 )
 
 // keyNames define a map of key names to MMKeyCode
@@ -251,19 +76,19 @@ var keyNames = map[string]C.MMKeyCode{
 	"f24": C.K_F24,
 	//
 	"cmd":         C.K_META,
-	"lcmd":        C.K_LMETA,
-	"rcmd":        C.K_RMETA,
+	"cmdl":        C.K_LMETA,
+	"cmdr":        C.K_RMETA,
 	"command":     C.K_META,
 	"alt":         C.K_ALT,
-	"lalt":        C.K_LALT,
-	"ralt":        C.K_RALT,
+	"altl":        C.K_LALT,
+	"altr":        C.K_RALT,
 	"ctrl":        C.K_CONTROL,
-	"lctrl":       C.K_LCONTROL,
-	"rctrl":       C.K_RCONTROL,
+	"ctrll":       C.K_LCONTROL,
+	"ctrlr":       C.K_RCONTROL,
 	"control":     C.K_CONTROL,
 	"shift":       C.K_SHIFT,
-	"lshift":      C.K_LSHIFT,
-	"rshift":      C.K_RSHIFT,
+	"shiftl":      C.K_LSHIFT,
+	"shiftr":      C.K_RSHIFT,
 	"right_shift": C.K_RSHIFT,
 	"capslock":    C.K_CAPSLOCK,
 	"space":       C.K_SPACE,
@@ -271,6 +96,8 @@ var keyNames = map[string]C.MMKeyCode{
 	"printscreen": C.K_PRINTSCREEN,
 	"insert":      C.K_INSERT,
 	"menu":        C.K_MENU,
+	"scroll_lock": C.K_SCROLL_LOCK,
+	"pause_break": C.K_PAUSE,
 
 	"audio_mute":     C.K_AUDIO_VOLUME_MUTE,
 	"audio_vol_down": C.K_AUDIO_VOLUME_DOWN,
@@ -296,9 +123,6 @@ var keyNames = map[string]C.MMKeyCode{
 	"num8":     C.K_NUMPAD_8,
 	"num9":     C.K_NUMPAD_9,
 	"num_lock": C.K_NUMPAD_LOCK,
-
-	"scroll_lock": C.K_SCROLL_LOCK,
-	"pause_break": C.K_PAUSE,
 
 	// todo: removed
 	"numpad_0":    C.K_NUMPAD_0,
@@ -337,7 +161,7 @@ func CmdCtrl() string {
 	if runtime.GOOS == "darwin" {
 		return "cmd"
 	}
-	return "ctrl"
+	return "ctrl" // Ctrl
 }
 
 // It sends a key press and release to the active application
@@ -379,18 +203,17 @@ func checkKeyCodes(k string) (key C.MMKeyCode, err error) {
 func checkKeyFlags(f string) (flags C.MMKeyFlags) {
 	m := map[string]C.MMKeyFlags{
 		"alt":    C.MOD_ALT,
-		"ralt":   C.MOD_ALT,
-		"lalt":   C.MOD_ALT,
+		"altr":   C.MOD_ALT,
+		"altl":   C.MOD_ALT,
 		"cmd":    C.MOD_META,
-		"rcmd":   C.MOD_META,
-		"lcmd":   C.MOD_META,
+		"cmdr":   C.MOD_META,
+		"cmdl":   C.MOD_META,
 		"ctrl":   C.MOD_CONTROL,
-		"control":   C.MOD_CONTROL,
-		"rctrl":  C.MOD_CONTROL,
-		"lctrl":  C.MOD_CONTROL,
+		"ctrlr":  C.MOD_CONTROL,
+		"ctrll":  C.MOD_CONTROL,
 		"shift":  C.MOD_SHIFT,
-		"rshift": C.MOD_SHIFT,
-		"lshift": C.MOD_SHIFT,
+		"shiftr": C.MOD_SHIFT,
+		"shiftl": C.MOD_SHIFT,
 		"none":   C.MOD_NONE,
 	}
 

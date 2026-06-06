@@ -12,7 +12,7 @@
 > Automatización de escritorio con Golang, pruebas automáticas y uso del ordenador con IA (AI Computer Use). <br>
 > Controla el ratón, el teclado, lee la pantalla, procesos, manejadores de ventanas, imágenes y mapas de bits, y escucha de eventos globales.
 
-RobotGo es compatible con Mac, Windows y Linux (X11); y robotgo es compatible con arm64 y x86-amd64.
+RobotGo es compatible con Mac, Windows y Linux; y robotgo es compatible con arm64 y x86-amd64.
 
 Ahora estoy construyendo [Codg](https://github.com/vcaesar/codg), un sistema de agentes de IA sencillo para programar y trabajar: automático, asíncrono, concurrente, eficiente y de alta precisión.
 
