@@ -80,8 +80,7 @@ func TypeDelay(str string, delay int) { lb.TypeDelay(str, delay) }
 // SetDelay set the default typing delay.
 func SetDelay(d ...int) { lb.SetDelay(d...) }
 
-// CmdCtrl return the cmd/ctrl key string for the platform.
-func CmdCtrl() string { return lb.CmdCtrl() }
+// CmdCtrl lives in robotgo_pub.go (build-tag-free), so it is NOT re-declared here.
 
 // --- Mouse ---
 

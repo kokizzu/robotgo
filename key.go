@@ -155,15 +155,6 @@ var keyNames = map[string]C.MMKeyCode{
 	// { NULL:              C.K_NOT_A_KEY }
 }
 
-// CmdCtrl If the operating system is macOS, return the key string "cmd",
-// otherwise return the key string "ctrl
-func CmdCtrl() string {
-	if runtime.GOOS == "darwin" {
-		return "cmd"
-	}
-	return "ctrl" // Ctrl
-}
-
 // It sends a key press and release to the active application
 func tapKeyCode(code C.MMKeyCode, flags C.MMKeyFlags, pid C.uintptr) {
 	C.toggleKeyCode(code, true, flags, pid)
@@ -206,9 +197,11 @@ func checkKeyFlags(f string) (flags C.MMKeyFlags) {
 		"altr":   C.MOD_ALT,
 		"altl":   C.MOD_ALT,
 		"cmd":    C.MOD_META,
+		"command":    C.MOD_META,
 		"cmdr":   C.MOD_META,
 		"cmdl":   C.MOD_META,
 		"ctrl":   C.MOD_CONTROL,
+		"control":   C.MOD_CONTROL,
 		"ctrlr":  C.MOD_CONTROL,
 		"ctrll":  C.MOD_CONTROL,
 		"shift":  C.MOD_SHIFT,
@@ -556,15 +549,6 @@ func Paste(str string) error {
 		return err
 	}
 	return CmdV()
-}
-
-// CmdV tap key command + v or control + v
-func CmdV() error {
-	if runtime.GOOS == "darwin" {
-		return KeyTap("v", "command")
-	}
-
-	return KeyTap("v", "control")
 }
 
 // TypeStrDelay type string width delay
