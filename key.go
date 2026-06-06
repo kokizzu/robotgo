@@ -1,7 +1,7 @@
 //go:build !wayland && !win && !libei
 // +build !wayland,!win,!libei
 
-// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+// Copyright (c) 2016-2026 AtomAI, All rights reserved.
 //
 // See the COPYRIGHT file at the top-level directory of this distribution and at
 // https://github.com/go-vgo/robotgo/blob/master/LICENSE
@@ -25,12 +25,9 @@ import (
 	"math/rand"
 	"reflect"
 	"runtime"
-	"strconv"
 	"strings"
 	"unicode"
 	"unsafe"
-
-	"github.com/go-vgo/robotgo/clipboard"
 )
 
 // keyNames define a map of key names to MMKeyCode
@@ -155,15 +152,6 @@ var keyNames = map[string]C.MMKeyCode{
 	// { NULL:              C.K_NOT_A_KEY }
 }
 
-// CmdCtrl If the operating system is macOS, return the key string "cmd",
-// otherwise return the key string "ctrl
-func CmdCtrl() string {
-	if runtime.GOOS == "darwin" {
-		return "cmd"
-	}
-	return "ctrl" // Ctrl
-}
-
 // It sends a key press and release to the active application
 func tapKeyCode(code C.MMKeyCode, flags C.MMKeyFlags, pid C.uintptr) {
 	C.toggleKeyCode(code, true, flags, pid)
@@ -202,19 +190,21 @@ func checkKeyCodes(k string) (key C.MMKeyCode, err error) {
 
 func checkKeyFlags(f string) (flags C.MMKeyFlags) {
 	m := map[string]C.MMKeyFlags{
-		"alt":    C.MOD_ALT,
-		"altr":   C.MOD_ALT,
-		"altl":   C.MOD_ALT,
-		"cmd":    C.MOD_META,
-		"cmdr":   C.MOD_META,
-		"cmdl":   C.MOD_META,
-		"ctrl":   C.MOD_CONTROL,
-		"ctrlr":  C.MOD_CONTROL,
-		"ctrll":  C.MOD_CONTROL,
-		"shift":  C.MOD_SHIFT,
-		"shiftr": C.MOD_SHIFT,
-		"shiftl": C.MOD_SHIFT,
-		"none":   C.MOD_NONE,
+		"alt":     C.MOD_ALT,
+		"altr":    C.MOD_ALT,
+		"altl":    C.MOD_ALT,
+		"cmd":     C.MOD_META,
+		"command": C.MOD_META,
+		"cmdr":    C.MOD_META,
+		"cmdl":    C.MOD_META,
+		"ctrl":    C.MOD_CONTROL,
+		"control": C.MOD_CONTROL,
+		"ctrlr":   C.MOD_CONTROL,
+		"ctrll":   C.MOD_CONTROL,
+		"shift":   C.MOD_SHIFT,
+		"shiftr":  C.MOD_SHIFT,
+		"shiftl":  C.MOD_SHIFT,
+		"none":    C.MOD_NONE,
 	}
 
 	if v, ok := m[f]; ok {
@@ -303,24 +293,6 @@ func keyToggles(k string, keyArr []string, pid int) error {
 |__|\__\ |_______|   |__|     |______/   \______/  /__/     \__\ | _| `._____||_______/
 
 */
-
-// ToInterfaces convert []string to []interface{}
-func ToInterfaces(fields []string) []interface{} {
-	res := make([]interface{}, 0, len(fields))
-	for _, s := range fields {
-		res = append(res, s)
-	}
-	return res
-}
-
-// ToStrings convert []interface{} to []string
-func ToStrings(fields []interface{}) []string {
-	res := make([]string, 0, len(fields))
-	for _, s := range fields {
-		res = append(res, s.(string))
-	}
-	return res
-}
 
 // toErr it converts a C string to a Go error
 func toErr(str *C.char) error {
@@ -436,29 +408,6 @@ func KeyUp(key string, args ...interface{}) error {
 	return KeyToggle(key, arr...)
 }
 
-// ReadAll read string from clipboard
-func ReadAll() (string, error) {
-	return clipboard.ReadAll()
-}
-
-// WriteAll write string to clipboard
-func WriteAll(text string) error {
-	return clipboard.WriteAll(text)
-}
-
-// CharCodeAt char code at utf-8
-func CharCodeAt(s string, n int) rune {
-	i := 0
-	for _, r := range s {
-		if i == n {
-			return r
-		}
-		i++
-	}
-
-	return 0
-}
-
 // UnicodeType tap the uint32 unicode
 func UnicodeType(str uint32, args ...int) {
 	cstr := C.uint(str)
@@ -473,27 +422,6 @@ func UnicodeType(str uint32, args ...int) {
 	}
 
 	C.unicodeType(cstr, C.uintptr(pid), C.int8_t(isPid))
-}
-
-// ToUC trans string to unicode []string
-func ToUC(text string) []string {
-	var uc []string
-
-	for _, r := range text {
-		textQ := strconv.QuoteToASCII(string(r))
-		textUnQ := textQ[1 : len(textQ)-1]
-
-		st := strings.Replace(textUnQ, "\\u", "U", -1)
-		if st == "\\\\" {
-			st = "\\"
-		}
-		if st == `\"` {
-			st = `"`
-		}
-		uc = append(uc, st)
-	}
-
-	return uc
 }
 
 func inputUTF(str string) {
@@ -557,56 +485,4 @@ func Type(str string, args ...int) {
 		// }
 	}
 	MilliSleep(KeySleep)
-}
-
-// PasteStr paste a string
-//
-// Deprecated: use the Paste()
-func PasteStr(str string) error {
-	return Paste(str)
-}
-
-// Paste paste a string (supported UTF-8),
-// write the string to clipboard and tap `cmd + v`
-func Paste(str string) error {
-	err := clipboard.WriteAll(str)
-	if err != nil {
-		return err
-	}
-	return CmdV()
-}
-
-// CmdV tap key command + v or control + v
-func CmdV() error {
-	if runtime.GOOS == "darwin" {
-		return KeyTap("v", "command")
-	}
-
-	return KeyTap("v", "control")
-}
-
-// TypeStrDelay type string width delay
-//
-// Deprecated: use the TypeDelay()
-func TypeStrDelay(str string, delay int) {
-	TypeDelay(str, delay)
-}
-
-// TypeDelay type string with delayed
-// And you can use robotgo.KeySleep = 100 to delayed not this function
-func TypeDelay(str string, delay int) {
-	TypeStr(str)
-	MilliSleep(delay)
-}
-
-// SetDelay sets the key and mouse delay
-// robotgo.SetDelay(100) option the robotgo.KeySleep and robotgo.MouseSleep = d
-func SetDelay(d ...int) {
-	v := 10
-	if len(d) > 0 {
-		v = d[0]
-	}
-
-	KeySleep = v
-	MouseSleep = v
 }

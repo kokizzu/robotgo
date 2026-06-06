@@ -1,7 +1,7 @@
 //go:build linux && wayland && !libei
 // +build linux,wayland,!libei
 
-// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+// Copyright (c) 2016-2026 AtomAI, All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0>
@@ -74,16 +74,15 @@ func TypeDelay(str string, delay int) { wl.TypeDelay(str, delay) }
 // SetDelay set the default typing delay.
 func SetDelay(d ...int) { wl.SetDelay(d...) }
 
-// CmdCtrl return the cmd/ctrl key string for the platform.
-func CmdCtrl() string { return wl.CmdCtrl() }
+// CmdCtrl lives in robotgo_pub.go (build-tag-free), so it is NOT re-declared here.
 
 // --- Mouse ---
 
 // Move move the mouse to (x, y).
 func Move(x, y int, displayId ...int) { wl.Move(x, y, displayId...) }
 
-// MoveRelative move the mouse relative to the current position.
-func MoveRelative(x, y int) { wl.MoveRelative(x, y) }
+// // MoveRelative move the mouse relative to the current position.
+// func MoveRelative(x, y int) { wl.MoveRelative(x, y) }
 
 // MoveSmooth move the mouse smoothly to (x, y).
 func MoveSmooth(x, y int, args ...any) bool { return wl.MoveSmooth(x, y, args...) }

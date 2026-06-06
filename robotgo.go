@@ -1,7 +1,7 @@
 //go:build !wayland && !win && !libei
 // +build !wayland,!win,!libei
 
-// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+// Copyright (c) 2016-2026 AtomAI, All rights reserved.
 //
 // See the COPYRIGHT file at the top-level directory of this distribution and at
 // https://github.com/go-vgo/robotgo/blob/master/LICENSE
@@ -199,16 +199,6 @@ func SysScale(displayId ...int) float64 {
 func Scaled(x int, displayId ...int) int {
 	f := ScaleF(displayId...)
 	return Scaled0(x, f)
-}
-
-// Scaled0 return int(x * f)
-func Scaled0(x int, f float64) int {
-	return int(float64(x) * f)
-}
-
-// Scaled1 return int(x / f)
-func Scaled1(x int, f float64) int {
-	return int(float64(x) / f)
 }
 
 // GetScreenSize get the screen size
@@ -566,26 +556,6 @@ func MoveSmooth(x, y int, args ...interface{}) bool {
 	return smoothMove(x, y, false, args...)
 }
 
-// MoveArgs get the mouse relative args
-func MoveArgs(x, y int) (int, int) {
-	mx, my := Location()
-	mx = mx + x
-	my = my + y
-
-	return mx, my
-}
-
-// MoveRelative move mouse with relative
-func MoveRelative(x, y int) {
-	Move(MoveArgs(x, y))
-}
-
-// MoveSmoothRelative move mouse smooth with relative
-func MoveSmoothRelative(x, y int, args ...interface{}) {
-	mx, my := MoveArgs(x, y)
-	MoveSmooth(mx, my, args...)
-}
-
 // Location get the mouse location position return x, y
 func Location() (int, int) {
 	pos := C.location()
@@ -759,15 +729,6 @@ func MoveClick(x, y int, args ...interface{}) {
 	Click(args...)
 }
 
-// MovesClick move smooth and click the mouse
-//
-// use the `robotgo.MouseSleep = 100`
-func MovesClick(x, y int, args ...interface{}) {
-	MoveSmooth(x, y)
-	MilliSleep(50)
-	Click(args...)
-}
-
 // Toggle toggle the mouse, support button:
 //
 //		"left", "center", "right",
@@ -890,16 +851,6 @@ func ScrollSmooth(to int, args ...int) {
 		}
 	}
 	MilliSleep(MouseSleep)
-}
-
-// ScrollRelative scroll mouse with relative
-//
-// Examples:
-//
-//	robotgo.ScrollRelative(10, 10)
-func ScrollRelative(x, y int, args ...int) {
-	mx, my := MoveArgs(x, y)
-	Scroll(mx, my, args...)
 }
 
 /*

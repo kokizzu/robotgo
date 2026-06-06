@@ -55,7 +55,7 @@ Key subpackage relationships: the root `robotgo` package pulls C code from `scre
 
 ## Code Style
 
-- **Copyright header**: every Go and C file starts with the 10-line `Copyright (c) 2016-2025 AtomAI...` block (see `CONTRIBUTING.md`). Preserve it verbatim when editing; add a second header only if authorship changes.
+- **Copyright header**: every Go and C file starts with the 10-line `Copyright (c) 2016-2026 AtomAI...` block (see `CONTRIBUTING.md`). Preserve it verbatim when editing; add a second header only if authorship changes.
 - **Indentation**: tabs (Go default). Run `gofmt` before committing.
 - **Build tags**: use both forms together — `//go:build darwin` plus legacy `// +build darwin` — matching existing files.
 - **Cgo**: `import "C"` immediately follows a `/* ... */` comment block containing `#cgo` directives and `#include`s. Keep LDFLAGS per-OS (`#cgo darwin LDFLAGS`, `#cgo linux LDFLAGS`, `#cgo windows LDFLAGS`).
