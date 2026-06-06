@@ -25,12 +25,9 @@ import (
 	"math/rand"
 	"reflect"
 	"runtime"
-	"strconv"
 	"strings"
 	"unicode"
 	"unsafe"
-
-	"github.com/go-vgo/robotgo/clipboard"
 )
 
 // keyNames define a map of key names to MMKeyCode
@@ -411,29 +408,6 @@ func KeyUp(key string, args ...interface{}) error {
 	return KeyToggle(key, arr...)
 }
 
-// ReadAll read string from clipboard
-func ReadAll() (string, error) {
-	return clipboard.ReadAll()
-}
-
-// WriteAll write string to clipboard
-func WriteAll(text string) error {
-	return clipboard.WriteAll(text)
-}
-
-// CharCodeAt char code at utf-8
-func CharCodeAt(s string, n int) rune {
-	i := 0
-	for _, r := range s {
-		if i == n {
-			return r
-		}
-		i++
-	}
-
-	return 0
-}
-
 // UnicodeType tap the uint32 unicode
 func UnicodeType(str uint32, args ...int) {
 	cstr := C.uint(str)
@@ -448,27 +422,6 @@ func UnicodeType(str uint32, args ...int) {
 	}
 
 	C.unicodeType(cstr, C.uintptr(pid), C.int8_t(isPid))
-}
-
-// ToUC trans string to unicode []string
-func ToUC(text string) []string {
-	var uc []string
-
-	for _, r := range text {
-		textQ := strconv.QuoteToASCII(string(r))
-		textUnQ := textQ[1 : len(textQ)-1]
-
-		st := strings.Replace(textUnQ, "\\u", "U", -1)
-		if st == "\\\\" {
-			st = "\\"
-		}
-		if st == `\"` {
-			st = `"`
-		}
-		uc = append(uc, st)
-	}
-
-	return uc
 }
 
 func inputUTF(str string) {
@@ -532,47 +485,4 @@ func Type(str string, args ...int) {
 		// }
 	}
 	MilliSleep(KeySleep)
-}
-
-// PasteStr paste a string
-//
-// Deprecated: use the Paste()
-func PasteStr(str string) error {
-	return Paste(str)
-}
-
-// Paste paste a string (supported UTF-8),
-// write the string to clipboard and tap `cmd + v`
-func Paste(str string) error {
-	err := clipboard.WriteAll(str)
-	if err != nil {
-		return err
-	}
-	return CmdV()
-}
-
-// TypeStrDelay type string width delay
-//
-// Deprecated: use the TypeDelay()
-func TypeStrDelay(str string, delay int) {
-	TypeDelay(str, delay)
-}
-
-// TypeDelay type string with delayed
-// And you can use robotgo.KeySleep = 100 to delayed not this function
-func TypeDelay(str string, delay int) {
-	Type(str)
-	MilliSleep(delay)
-}
-
-// SetDelay sets the key and mouse delay
-// robotgo.SetDelay(100) option the robotgo.KeySleep and robotgo.MouseSleep = d
-func SetDelay(d ...int) {
-	v := 10
-	if len(d) > 0 {
-		v = d[0]
-	}
-
-	KeySleep = v
-	MouseSleep = v
 }

@@ -81,8 +81,8 @@ func SetDelay(d ...int) { wl.SetDelay(d...) }
 // Move move the mouse to (x, y).
 func Move(x, y int, displayId ...int) { wl.Move(x, y, displayId...) }
 
-// MoveRelative move the mouse relative to the current position.
-func MoveRelative(x, y int) { wl.MoveRelative(x, y) }
+// // MoveRelative move the mouse relative to the current position.
+// func MoveRelative(x, y int) { wl.MoveRelative(x, y) }
 
 // MoveSmooth move the mouse smoothly to (x, y).
 func MoveSmooth(x, y int, args ...any) bool { return wl.MoveSmooth(x, y, args...) }
