@@ -132,7 +132,10 @@ func TestKey(t *testing.T) {
 	e = KeyUp("a")
 	tt.Nil(t, e)
 
-	e = KeyPress("b")
+	e = KeyTap(ScrollLock)
+	tt.Nil(t, e)
+
+	e = KeyTap(PauseBreak)
 	tt.Nil(t, e)
 }
 

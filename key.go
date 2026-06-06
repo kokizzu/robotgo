@@ -189,6 +189,9 @@ const (
 	Num9    = "num9"
 	NumLock = "num_lock"
 
+	ScrollLock = "scroll_lock"
+	PauseBreak = "pause_break"
+
 	NumDecimal = "num."
 	NumPlus    = "num+"
 	NumMinus   = "num-"
@@ -294,6 +297,9 @@ var keyNames = map[string]C.MMKeyCode{
 	"num9":     C.K_NUMPAD_9,
 	"num_lock": C.K_NUMPAD_LOCK,
 
+	"scroll_lock": C.K_SCROLL_LOCK,
+	"pause_break": C.K_PAUSE,
+
 	// todo: removed
 	"numpad_0":    C.K_NUMPAD_0,
 	"numpad_1":    C.K_NUMPAD_1,
@@ -379,6 +385,7 @@ func checkKeyFlags(f string) (flags C.MMKeyFlags) {
 		"rcmd":   C.MOD_META,
 		"lcmd":   C.MOD_META,
 		"ctrl":   C.MOD_CONTROL,
+		"control":   C.MOD_CONTROL,
 		"rctrl":  C.MOD_CONTROL,
 		"lctrl":  C.MOD_CONTROL,
 		"shift":  C.MOD_SHIFT,
