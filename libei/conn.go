@@ -1,11 +1,23 @@
 //go:build linux
 // +build linux
 
+// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution and at
+// https://github.com/go-vgo/robotgo/blob/master/LICENSE
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0>
+//
+// This file may not be copied, modified, or distributed
+// except according to those terms.
+
 package libei
 
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -107,25 +119,38 @@ type stream struct {
 
 var (
 	globalConn *conn
-	connOnce   sync.Once
-	connErr    error
+	connMu     sync.Mutex
 
 	// tokenCounter makes handle/session tokens unique within a process.
 	tokenCounter uint64
 )
 
-// ensureConn lazily establishes the portal session exactly once.
+// ensureConn lazily establishes the portal session, re-establishing it if the
+// previous connection was never created or has since been closed. Using a
+// mutex (instead of sync.Once) keeps the backend recoverable after a failed
+// handshake or an explicit Close.
 func ensureConn() (*conn, error) {
-	connOnce.Do(func() {
-		globalConn, connErr = newConn()
-	})
-	if connErr != nil {
-		return nil, connErr
+	connMu.Lock()
+	defer connMu.Unlock()
+
+	if globalConn != nil && globalConn.healthy() {
+		return globalConn, nil
 	}
-	if globalConn == nil {
-		return nil, ErrNoConnection
+
+	c, err := newConn()
+	if err != nil {
+		globalConn = nil
+		return nil, err
 	}
+	globalConn = c
 	return globalConn, nil
+}
+
+// healthy reports whether the connection still has a live session bus.
+func (c *conn) healthy() bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.bus != nil
 }
 
 // newConn connects to the session bus and runs the
@@ -235,9 +260,11 @@ func (c *conn) callPortal(method string, args ...interface{}) (map[string]dbus.V
 			case respSuccess:
 				return results, nil
 			case respCancelled:
-				return nil, fmt.Errorf("%w: %s cancelled by user", ErrNotSupported, method)
+				// The user denied or cancelled the portal dialog: the session
+				// could not be established, not a missing capability.
+				return nil, fmt.Errorf("%w: %s cancelled by user", ErrNoConnection, method)
 			default:
-				return nil, fmt.Errorf("%w: %s ended (code %d)", ErrNotSupported, method, code)
+				return nil, fmt.Errorf("%w: %s ended (code %d)", ErrNoConnection, method, code)
 			}
 		case <-timeout.C:
 			return nil, fmt.Errorf("%w: %s timed out", ErrNoConnection, method)
@@ -257,9 +284,18 @@ func (c *conn) createSession() error {
 	}
 
 	// Prefer the handle the portal reports; fall back to the predicted path.
+	// Portals may return the handle either as a dbus.ObjectPath or a plain
+	// string depending on the backend, so accept both.
 	if v, ok := results["session_handle"]; ok {
-		if s, ok := v.Value().(string); ok && s != "" {
-			c.sessionHandle = dbus.ObjectPath(s)
+		switch s := v.Value().(type) {
+		case dbus.ObjectPath:
+			if s != "" {
+				c.sessionHandle = s
+			}
+		case string:
+			if s != "" {
+				c.sessionHandle = dbus.ObjectPath(s)
+			}
 		}
 	}
 	if c.sessionHandle == "" {
@@ -299,7 +335,12 @@ func (c *conn) start() error {
 	}
 	if v, ok := results["restore_token"]; ok {
 		if tok, ok := v.Value().(string); ok && tok != "" {
-			saveRestoreToken(tok) // single-use: always re-persist the latest
+			// single-use: always re-persist the latest. A persistence failure
+			// is non-fatal (the user is re-prompted next run), but surface it
+			// rather than dropping it silently.
+			if werr := saveRestoreToken(tok); werr != nil {
+				log.Printf("robotgo/libei: persist restore token: %v", werr)
+			}
 		}
 	}
 	c.streams = parseStreams(results["streams"])
@@ -347,12 +388,17 @@ func (c *conn) hasKeyboard() bool { return c.devices&deviceKeyboard != 0 }
 // hasPointer reports whether pointer input was granted.
 func (c *conn) hasPointer() bool { return c.devices&devicePointer != 0 }
 
-// Close closes the portal session and the bus connection.
+// Close closes the portal session and the bus connection. After Close, a
+// subsequent call into the backend re-establishes a fresh session.
 func Close() {
+	connMu.Lock()
+	defer connMu.Unlock()
 	if globalConn == nil {
 		return
 	}
 	c := globalConn
+	globalConn = nil
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.bus != nil {
@@ -387,10 +433,10 @@ func loadRestoreToken() string {
 	return strings.TrimSpace(string(data))
 }
 
-func saveRestoreToken(tok string) {
+func saveRestoreToken(tok string) error {
 	p := tokenPath()
 	if err := os.MkdirAll(filepath.Dir(p), 0o700); err != nil {
-		return
+		return err
 	}
-	_ = os.WriteFile(p, []byte(tok), 0o600)
+	return os.WriteFile(p, []byte(tok), 0o600)
 }

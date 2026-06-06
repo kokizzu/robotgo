@@ -1,6 +1,17 @@
 //go:build linux
 // +build linux
 
+// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution and at
+// https://github.com/go-vgo/robotgo/blob/master/LICENSE
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0>
+//
+// This file may not be copied, modified, or distributed
+// except according to those terms.
+
 package wayland
 
 import (
@@ -128,8 +139,15 @@ func KeyTap(key string, args ...interface{}) error {
 	if err := c.keyboard.Key(ts, code, keyStatePressed); err != nil {
 		return err
 	}
-	time.Sleep(time.Duration(KeySleep) * time.Millisecond)
-	if err := c.keyboard.Key(ts+uint32(KeySleep), code, keyStateReleased); err != nil {
+	// Clamp the delay to a non-negative value: a negative KeySleep would skip
+	// the sleep but, more importantly, wrap uint32(KeySleep) into a huge value
+	// and corrupt the release timestamp.
+	ks := KeySleep
+	if ks < 0 {
+		ks = 0
+	}
+	time.Sleep(time.Duration(ks) * time.Millisecond)
+	if err := c.keyboard.Key(ts+uint32(ks), code, keyStateReleased); err != nil {
 		return err
 	}
 
@@ -221,7 +239,11 @@ func TypeStr(str string, args ...int) {
 }
 
 // TypeDelay types a string with a per-character delay in milliseconds.
+// A negative delay is treated as zero.
 func TypeDelay(str string, delay int) {
+	if delay < 0 {
+		delay = 0
+	}
 	old := KeySleep
 	KeySleep = delay
 	Type(str)

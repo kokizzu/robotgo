@@ -1,6 +1,17 @@
 //go:build linux
 // +build linux
 
+// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution and at
+// https://github.com/go-vgo/robotgo/blob/master/LICENSE
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0>
+//
+// This file may not be copied, modified, or distributed
+// except according to those terms.
+
 // Package libei provides a pure-Go libei/portal implementation of the robotgo
 // API for desktop automation on Wayland compositors that do NOT expose the
 // wlroots virtual-input protocols — most importantly GNOME (Mutter) and

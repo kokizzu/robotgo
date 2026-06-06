@@ -1,6 +1,17 @@
 //go:build windows
 // +build windows
 
+// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution and at
+// https://github.com/go-vgo/robotgo/blob/master/LICENSE
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0>
+//
+// This file may not be copied, modified, or distributed
+// except according to those terms.
+
 package win
 
 import (
@@ -262,14 +273,16 @@ func KeyToggle(key string, args ...interface{}) error {
 	return nil
 }
 
-// KeyDown presses a key down.
+// KeyDown presses a key down. Extra args (e.g. modifiers) are forwarded to
+// KeyToggle for API parity with the default robotgo backend.
 func KeyDown(key string, args ...interface{}) error {
-	return KeyToggle(key, "down")
+	return KeyToggle(key, append([]interface{}{"down"}, args...)...)
 }
 
-// KeyUp releases a key.
+// KeyUp releases a key. Extra args (e.g. modifiers) are forwarded to
+// KeyToggle for API parity with the default robotgo backend.
 func KeyUp(key string, args ...interface{}) error {
-	return KeyToggle(key, "up")
+	return KeyToggle(key, append([]interface{}{"up"}, args...)...)
 }
 
 // KeyPress presses a key (down + delay + up).

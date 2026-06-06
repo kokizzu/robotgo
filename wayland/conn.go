@@ -1,6 +1,17 @@
 //go:build linux
 // +build linux
 
+// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution and at
+// https://github.com/go-vgo/robotgo/blob/master/LICENSE
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0>
+//
+// This file may not be copied, modified, or distributed
+// except according to those terms.
+
 package wayland
 
 import (
@@ -9,6 +20,7 @@ import (
 	"log"
 	"os"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/vcaesar/go-wayland/client"
@@ -43,7 +55,7 @@ type conn struct {
 
 	// dispatch loop
 	dispatchDone chan struct{}
-	closed       bool
+	closed       atomic.Bool
 }
 
 // outputInfo tracks wl_output geometry.
@@ -65,8 +77,7 @@ type toplevelInfo struct {
 
 var (
 	globalConn *conn
-	connOnce   sync.Once
-	connErr    error
+	connMu     sync.Mutex
 )
 
 // ErrNotSupported is returned when a required Wayland protocol is not available.
@@ -75,14 +86,23 @@ var ErrNotSupported = errors.New("robotgo: required wayland protocol not support
 // ErrNoConnection is returned when the Wayland connection is not established.
 var ErrNoConnection = errors.New("robotgo: wayland connection not established")
 
-// ensureConn lazily initializes the global Wayland connection.
+// ensureConn lazily initializes the global Wayland connection, re-establishing
+// it if it was never created or has since been closed. A mutex (instead of
+// sync.Once) keeps the backend recoverable after a failed connect or Close.
 func ensureConn() (*conn, error) {
-	connOnce.Do(func() {
-		globalConn, connErr = newConn()
-	})
-	if connErr != nil {
-		return nil, connErr
+	connMu.Lock()
+	defer connMu.Unlock()
+
+	if globalConn != nil && !globalConn.closed.Load() {
+		return globalConn, nil
 	}
+
+	c, err := newConn()
+	if err != nil {
+		globalConn = nil
+		return nil, err
+	}
+	globalConn = c
 	return globalConn, nil
 }
 
@@ -101,6 +121,7 @@ func newConn() (*conn, error) {
 
 	registry, err := display.GetRegistry()
 	if err != nil {
+		_ = display.Context().Close()
 		return nil, fmt.Errorf("robotgo: get registry: %w", err)
 	}
 	c.registry = registry
@@ -113,19 +134,26 @@ func newConn() (*conn, error) {
 	c.roundtrip()
 	c.roundtrip()
 
-	// Create virtual pointer if manager is available
+	// Create virtual pointer if manager is available. Only retain the proxy
+	// on success; on failure leave c.pointer nil so we never keep a
+	// half-initialized object around.
 	if c.pointerManager != nil && c.seat != nil {
-		c.pointer, err = c.pointerManager.CreateVirtualPointer(c.seat)
-		if err != nil {
-			log.Printf("robotgo: create virtual pointer: %v", err)
+		pointer, perr := c.pointerManager.CreateVirtualPointer(c.seat)
+		if perr != nil {
+			log.Printf("robotgo: create virtual pointer: %v", perr)
+		} else {
+			c.pointer = pointer
 		}
 	}
 
-	// Create virtual keyboard if manager is available
+	// Create virtual keyboard if manager is available (same retain-on-success
+	// rule as the pointer above).
 	if c.keyboardManager != nil && c.seat != nil {
-		c.keyboard, err = c.keyboardManager.CreateVirtualKeyboard(c.seat)
-		if err != nil {
-			log.Printf("robotgo: create virtual keyboard: %v", err)
+		keyboard, kerr := c.keyboardManager.CreateVirtualKeyboard(c.seat)
+		if kerr != nil {
+			log.Printf("robotgo: create virtual keyboard: %v", kerr)
+		} else {
+			c.keyboard = keyboard
 		}
 	}
 
@@ -248,7 +276,7 @@ func (c *conn) dispatchLoop() {
 	defer close(c.dispatchDone)
 	for {
 		if err := c.display.Context().Dispatch(); err != nil {
-			if c.closed {
+			if c.closed.Load() {
 				return
 			}
 			log.Printf("robotgo: dispatch error: %v", err)
@@ -336,13 +364,17 @@ func (c *conn) setupKeymap() error {
 	return nil
 }
 
-// Close shuts down the Wayland connection.
+// Close shuts down the Wayland connection. After Close, a subsequent call into
+// the backend re-establishes a fresh connection.
 func Close() {
+	connMu.Lock()
+	defer connMu.Unlock()
 	if globalConn == nil {
 		return
 	}
 	c := globalConn
-	c.closed = true
+	globalConn = nil
+	c.closed.Store(true)
 
 	if c.pointer != nil {
 		_ = c.pointer.Destroy()

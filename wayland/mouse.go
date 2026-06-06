@@ -1,6 +1,17 @@
 //go:build linux
 // +build linux
 
+// Copyright (c) 2016-2025 AtomAI, All rights reserved.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution and at
+// https://github.com/go-vgo/robotgo/blob/master/LICENSE
+//
+// Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0>
+//
+// This file may not be copied, modified, or distributed
+// except according to those terms.
+
 package wayland
 
 import (
@@ -53,7 +64,7 @@ func Move(x, y int, displayId ...int) {
 		}
 	}
 
-	_ = c.pointer.MotionAbsolute(timestamp(), uint32(x), uint32(y), xExtent, yExtent)
+	_ = c.pointer.MotionAbsolute(timestamp(), clampExtent(x, xExtent), clampExtent(y, yExtent), xExtent, yExtent)
 	_ = c.pointer.Frame()
 	mouseDelay()
 }
@@ -112,8 +123,8 @@ func MoveSmooth(x, y int, args ...interface{}) bool {
 			t = 1 - math.Pow(-2*t+2, 3)/2
 		}
 
-		cx := uint32(float64(x) * t)
-		cy := uint32(float64(y) * t)
+		cx := clampExtent(int(float64(x)*t), xExtent)
+		cy := clampExtent(int(float64(y)*t), yExtent)
 		_ = c.pointer.MotionAbsolute(timestamp(), cx, cy, xExtent, yExtent)
 		_ = c.pointer.Frame()
 		time.Sleep(time.Duration(sleepMs) * time.Millisecond)
@@ -322,6 +333,19 @@ func ScrollSmooth(to int, args ...int) {
 		MilliSleep(tm)
 	}
 	MilliSleep(MouseSleep)
+}
+
+// clampExtent clamps a coordinate to the valid [0, extent] range and returns it
+// as a uint32, avoiding the wraparound that a direct uint32(negative) conversion
+// would cause for off-screen / negative inputs.
+func clampExtent(v int, extent uint32) uint32 {
+	if v < 0 {
+		return 0
+	}
+	if uint32(v) > extent {
+		return extent
+	}
+	return uint32(v)
 }
 
 func resolveButton(btn string) int {
