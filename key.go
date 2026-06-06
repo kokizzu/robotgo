@@ -96,6 +96,8 @@ var keyNames = map[string]C.MMKeyCode{
 	"printscreen": C.K_PRINTSCREEN,
 	"insert":      C.K_INSERT,
 	"menu":        C.K_MENU,
+	"scroll_lock": C.K_SCROLL_LOCK,
+	"pause_break": C.K_PAUSE,
 
 	"audio_mute":     C.K_AUDIO_VOLUME_MUTE,
 	"audio_vol_down": C.K_AUDIO_VOLUME_DOWN,

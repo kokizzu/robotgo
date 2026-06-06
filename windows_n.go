@@ -29,45 +29,16 @@ import (
 	win "github.com/go-vgo/robotgo/win"
 )
 
-// Version of the active (windows, Cgo-free) backend.
-const Version = win.Version
-
-// Types — aliased so robotgo.Point == win.Point, etc.
-type (
-	Point = win.Point
-	Size  = win.Size
-	Rect  = win.Rect
-)
-
-// Bitmap mirrors the plain image descriptor used by the portable img.go
-// helpers (RGBAToBitmap, ImgToBitmap, ToRGBAGo). The Cgo backend defines an
-// identical struct in robotgo.go; under the win tag that file is excluded, so
-// the type is provided here instead.
-type Bitmap struct {
-	ImgBuf        *uint8
-	Width, Height int
-
-	Bytewidth     int
-	BitsPixel     uint8
-	BytesPerPixel uint8
-}
+// The shared API surface — Version, GetVersion, Sleep, MilliSleep, the
+// Bitmap/Point/Size/Rect types and the DisplayID/NotPid/Scale tunables — lives
+// in the build-tag-free robotgo_pub.go and is compiled for every backend, so
+// it is NOT re-declared here.
 
 // Sentinel errors (values — aliased so errors.Is works across packages).
 var (
 	ErrNotFound     = win.ErrNotFound
 	ErrNotSupported = win.ErrNotSupported
 )
-
-// --- General ---
-
-// GetVersion get the robotgo version.
-func GetVersion() string { return win.GetVersion() }
-
-// Sleep time.Sleep tm second.
-func Sleep(tm int) { win.Sleep(tm) }
-
-// MilliSleep sleep tm milli second.
-func MilliSleep(tm int) { win.MilliSleep(tm) }
 
 // --- Keyboard ---
 
@@ -154,7 +125,10 @@ func GetScreenSize() (int, int) { return win.GetScreenSize() }
 func GetScaleSize(displayId ...int) (int, int) { return win.GetScaleSize(displayId...) }
 
 // GetScreenRect get the screen rect (x, y, w, h).
-func GetScreenRect(displayId ...int) Rect { return win.GetScreenRect(displayId...) }
+func GetScreenRect(displayId ...int) Rect {
+	r := win.GetScreenRect(displayId...)
+	return Rect{Point{r.X, r.Y}, Size{r.W, r.H}}
+}
 
 // DisplaysNum get the number of displays.
 func DisplaysNum() int { return win.DisplaysNum() }

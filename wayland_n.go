@@ -29,28 +29,10 @@ import (
 	wl "github.com/go-vgo/robotgo/wayland"
 )
 
-// Version of the active (wayland) backend.
-const Version = wl.Version
-
-// Types — aliased so robotgo.Point == wayland.Point, etc.
-type (
-	Point = wl.Point
-	Size  = wl.Size
-	Rect  = wl.Rect
-)
-
-// Bitmap mirrors the plain image descriptor used by the portable img.go
-// helpers (RGBAToBitmap, ImgToBitmap, ToRGBAGo). The Cgo backend defines an
-// identical struct in robotgo.go; under the wayland tag that file is excluded,
-// so the type is provided here instead.
-type Bitmap struct {
-	ImgBuf        *uint8
-	Width, Height int
-
-	Bytewidth     int
-	BitsPixel     uint8
-	BytesPerPixel uint8
-}
+// The shared API surface — Version, GetVersion, Sleep, MilliSleep, the
+// Bitmap/Point/Size/Rect types and the DisplayID/NotPid/Scale tunables — lives
+// in the build-tag-free robotgo_pub.go and is compiled for every backend, so
+// it is NOT re-declared here.
 
 // Sentinel errors (values — aliased so errors.Is works across packages).
 var (
@@ -59,15 +41,6 @@ var (
 )
 
 // --- General ---
-
-// GetVersion get the robotgo version.
-func GetVersion() string { return wl.GetVersion() }
-
-// Sleep time.Sleep tm second.
-func Sleep(tm int) { wl.Sleep(tm) }
-
-// MilliSleep sleep tm milli second.
-func MilliSleep(tm int) { wl.MilliSleep(tm) }
 
 // Close the wayland connection and release resources.
 func Close() { wl.Close() }
@@ -157,7 +130,10 @@ func GetScreenSize() (int, int) { return wl.GetScreenSize() }
 func GetScaleSize(displayId ...int) (int, int) { return wl.GetScaleSize(displayId...) }
 
 // GetScreenRect get the screen rect (x, y, w, h).
-func GetScreenRect(displayId ...int) Rect { return wl.GetScreenRect(displayId...) }
+func GetScreenRect(displayId ...int) Rect {
+	r := wl.GetScreenRect(displayId...)
+	return Rect{Point{r.X, r.Y}, Size{r.W, r.H}}
+}
 
 // DisplaysNum get the number of displays.
 func DisplaysNum() int { return wl.DisplaysNum() }
