@@ -70,6 +70,9 @@ enum _MMKeyCode {
 	// K_PRINTSCREEN = K_NOT_A_KEY,
 	K_PRINTSCREEN = kVK_F13,
 	K_MENU = K_NOT_A_KEY,
+	// macOS has no dedicated Scroll Lock / Pause virtual keycodes.
+	K_SCROLL_LOCK = K_NOT_A_KEY, // f14
+	K_PAUSE = K_NOT_A_KEY, // f15
 
 	K_NUMPAD_0 = kVK_ANSI_Keypad0,
 	K_NUMPAD_1 = kVK_ANSI_Keypad1,

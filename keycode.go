@@ -148,6 +148,8 @@ const (
 	Printscreen = "printscreen" // No Mac support
 	Insert      = "insert"
 	Menu        = "menu" // Windows only
+	ScrollLock  = "scroll_lock"
+	PauseBreak  = "pause_break"
 
 	AudioMute    = "audio_mute"     // Mute the volume
 	AudioVolDown = "audio_vol_down" // Lower the volume
