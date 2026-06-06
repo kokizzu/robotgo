@@ -1,6 +1,9 @@
 package robotgo
 
-import "time"
+import (
+	"runtime"
+	"time"
+)
 
 const (
 	// Version get the robotgo version
@@ -76,4 +79,36 @@ func MilliSleep(tm int) {
 // Sleep time.Sleep tm second
 func Sleep(tm int) {
 	time.Sleep(time.Duration(tm) * time.Second)
+}
+
+// ToInterfaces convert []string to []interface{}
+func ToInterfaces(fields []string) []interface{} {
+	res := make([]interface{}, 0, len(fields))
+	for _, s := range fields {
+		res = append(res, s)
+	}
+	return res
+}
+
+// ToStrings convert []interface{} to []string
+func ToStrings(fields []interface{}) []string {
+	res := make([]string, 0, len(fields))
+	for _, s := range fields {
+		res = append(res, s.(string))
+	}
+	return res
+}
+
+// CmdCtrl If the operating system is macOS, return the key string "cmd",
+// otherwise return the key string "ctrl
+func CmdCtrl() string {
+	if runtime.GOOS == "darwin" {
+		return "cmd"
+	}
+	return "ctrl" // Ctrl
+}
+
+// CmdV tap key command + v or control + v
+func CmdV() error {
+	return KeyTap("v", CmdCtrl())
 }

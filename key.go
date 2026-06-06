@@ -304,24 +304,6 @@ func keyToggles(k string, keyArr []string, pid int) error {
 
 */
 
-// ToInterfaces convert []string to []interface{}
-func ToInterfaces(fields []string) []interface{} {
-	res := make([]interface{}, 0, len(fields))
-	for _, s := range fields {
-		res = append(res, s)
-	}
-	return res
-}
-
-// ToStrings convert []interface{} to []string
-func ToStrings(fields []interface{}) []string {
-	res := make([]string, 0, len(fields))
-	for _, s := range fields {
-		res = append(res, s.(string))
-	}
-	return res
-}
-
 // toErr it converts a C string to a Go error
 func toErr(str *C.char) error {
 	gstr := C.GoString(str)
@@ -595,7 +577,7 @@ func TypeStrDelay(str string, delay int) {
 // TypeDelay type string with delayed
 // And you can use robotgo.KeySleep = 100 to delayed not this function
 func TypeDelay(str string, delay int) {
-	TypeStr(str)
+	Type(str)
 	MilliSleep(delay)
 }
 
