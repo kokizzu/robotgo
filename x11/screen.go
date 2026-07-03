@@ -85,6 +85,39 @@ func DisplaysNum() int {
 	return len(c.xu.Setup().Roots)
 }
 
+// MainDisplayID returns the index of the default screen among the setup
+// roots, mirroring the Cgo backend's GetMainId. Returns -1 when no X11
+// connection is available.
+func MainDisplayID() int {
+	c, err := ensureConn()
+	if err != nil {
+		return -1
+	}
+	setup := c.xu.Setup()
+	def := setup.DefaultScreen(c.c)
+	for i := range setup.Roots {
+		if setup.Roots[i].Root == def.Root {
+			return i
+		}
+	}
+	return -1
+}
+
+// ScaleX returns the horizontal DPI of the default screen (dots per inch),
+// mirroring the Cgo backend's deprecated ScaleX. Returns 0 when no X11
+// connection or physical size information is available.
+func ScaleX() int {
+	c, err := ensureConn()
+	if err != nil {
+		return 0
+	}
+	s := c.xu.Setup().DefaultScreen(c.c)
+	if s.WidthInMillimeters == 0 {
+		return 0
+	}
+	return int(float64(s.WidthInPixels) * 25.4 / float64(s.WidthInMillimeters))
+}
+
 // GetPixelColor returns the pixel color at (x, y) as a 6-char hex string.
 func GetPixelColor(x, y int, displayId ...int) string {
 	img, err := CaptureImg(x, y, 1, 1)

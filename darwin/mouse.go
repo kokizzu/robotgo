@@ -37,10 +37,24 @@ func mouseButton(btn string) (down, up, dragged uint32, button uint32) {
 
 // postMouse creates and posts a single mouse event at point p.
 func postMouse(eventType uint32, p CGPoint, button uint32) {
+	postMouseState(eventType, p, button, 1)
+}
+
+// postMouseState creates and posts a single mouse event at point p carrying
+// an explicit click state (kCGMouseEventClickState: 1 = single click,
+// 2 = double click). macOS only recognizes a double click when the second
+// down/up pair carries click state 2.
+func postMouseState(eventType uint32, p CGPoint, button uint32, clickState int64) {
 	if !loaded {
 		return
 	}
 	ev := cgEventCreateMouseEvent(0, eventType, p, button)
+	if ev == 0 {
+		return
+	}
+	if clickState > 1 {
+		cgEventSetIntegerValueField(ev, kCGMouseEventClickState, clickState)
+	}
 	postEvent(ev)
 }
 
@@ -87,9 +101,14 @@ func MoveSmooth(x, y int, args ...interface{}) bool {
 		}
 		cx := float64(sx) + float64(x-sx)*t
 		cy := float64(sy) + float64(y-sy)*t
-		Move(int(math.Round(cx)), int(math.Round(cy)))
+		// Post directly (not via Move) so the global MouseSleep delay is not
+		// added to every step — matching the win/wayland backends, where only
+		// sleepMs applies per step and MouseSleep once at the end.
+		postMouse(kCGEventMouseMoved,
+			CGPoint{X: math.Round(cx), Y: math.Round(cy)}, kCGMouseButtonLeft)
 		time.Sleep(time.Duration(sleepMs) * time.Millisecond)
 	}
+	mouseDelay()
 	return true
 }
 
@@ -114,8 +133,11 @@ func Click(args ...interface{}) error {
 		count = 2
 	}
 	for i := 0; i < count; i++ {
-		postMouse(down, p, num)
-		postMouse(up, p, num)
+		// The second down/up pair must carry click state 2, otherwise macOS
+		// treats the pairs as two independent single clicks.
+		clickState := int64(i + 1)
+		postMouseState(down, p, num, clickState)
+		postMouseState(up, p, num, clickState)
 		if i < count-1 {
 			time.Sleep(50 * time.Millisecond)
 		}
@@ -172,16 +194,13 @@ func Scroll(x, y int, args ...int) {
 		msDelay = args[0]
 	}
 	if loaded {
-		// Create a line-unit scroll event then set the deltas explicitly.
-		// The deltas are overridden via CGEventSetIntegerValueField, so the
-		// variadic wheel argument's exact value does not matter (and stays
-		// correct across amd64/arm64 calling conventions).
-		ev := cgEventCreateScrollWheelEvent(0, kCGScrollEventUnitLine, 2, 0)
+		// Create a line-unit scroll event via the fixed-arity
+		// CGEventCreateScrollWheelEvent2 (the plain variant is variadic and
+		// unsafe to call through purego). Axis 1 is vertical, axis 2
+		// horizontal; macOS positive vertical delta scrolls up, so negate y
+		// for robotgo's down-positive convention.
+		ev := cgEventCreateScrollWheelEvent2(0, kCGScrollEventUnitLine, 2, int32(-y), int32(x), 0)
 		if ev != 0 {
-			// macOS scroll: positive delta scrolls up, so negate for
-			// robotgo's down-positive convention.
-			cgEventSetIntegerValueField(ev, kCGScrollWheelEventDeltaAxis1, int64(-y))
-			cgEventSetIntegerValueField(ev, kCGScrollWheelEventDeltaAxis2, int64(x))
 			postEvent(ev)
 		}
 	}

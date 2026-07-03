@@ -80,19 +80,26 @@ const (
 	kCGScrollWheelEventDeltaAxis2 = 12 // horizontal
 )
 
+// kCGMouseEventClickState is the CGEventField holding the click state:
+// 1 = single click, 2 = double click.
+const kCGMouseEventClickState = 1
+
 // CoreGraphics / Quartz function bindings (loaded via purego).
 var (
 	// Events.
-	cgEventCreate                 func(source uintptr) uintptr
-	cgEventCreateMouseEvent       func(source uintptr, mouseType uint32, point CGPoint, button uint32) uintptr
-	cgEventCreateKeyboardEvent    func(source uintptr, keycode uint16, keyDown bool) uintptr
-	cgEventCreateScrollWheelEvent func(source uintptr, units uint32, wheelCount uint32, wheel1 int32) uintptr
-	cgEventKeyboardSetUnicode     func(event uintptr, length uint64, str *uint16)
-	cgEventSetFlags               func(event uintptr, flags uint64)
-	cgEventSetIntegerValueField   func(event uintptr, field uint32, value int64)
-	cgEventGetLocation            func(event uintptr) CGPoint
-	cgEventPost                   func(tap uint32, event uintptr)
-	cgEventPostToPid              func(pid uint32, event uintptr)
+	cgEventCreate              func(source uintptr) uintptr
+	cgEventCreateMouseEvent    func(source uintptr, mouseType uint32, point CGPoint, button uint32) uintptr
+	cgEventCreateKeyboardEvent func(source uintptr, keycode uint16, keyDown bool) uintptr
+	// CGEventCreateScrollWheelEvent is variadic (the wheelCount varargs do not
+	// survive purego's fixed-arity trampoline on arm64), so the fixed-arity
+	// CGEventCreateScrollWheelEvent2 variant is bound instead.
+	cgEventCreateScrollWheelEvent2 func(source uintptr, units uint32, wheelCount uint32, wheel1, wheel2, wheel3 int32) uintptr
+	cgEventKeyboardSetUnicode      func(event uintptr, length uint64, str *uint16)
+	cgEventSetFlags                func(event uintptr, flags uint64)
+	cgEventSetIntegerValueField    func(event uintptr, field uint32, value int64)
+	cgEventGetLocation             func(event uintptr) CGPoint
+	cgEventPost                    func(tap uint32, event uintptr)
+	cgEventPostToPid               func(pid uint32, event uintptr)
 
 	// Displays.
 	cgMainDisplayID       func() uint32
@@ -133,10 +140,19 @@ func init() {
 		return
 	}
 
+	// RegisterLibFunc panics on a missing symbol; recover so an unavailable
+	// framework entry degrades to loaded=false instead of aborting the
+	// importing program.
+	defer func() {
+		if r := recover(); r != nil {
+			loaded = false
+		}
+	}()
+
 	purego.RegisterLibFunc(&cgEventCreate, cg, "CGEventCreate")
 	purego.RegisterLibFunc(&cgEventCreateMouseEvent, cg, "CGEventCreateMouseEvent")
 	purego.RegisterLibFunc(&cgEventCreateKeyboardEvent, cg, "CGEventCreateKeyboardEvent")
-	purego.RegisterLibFunc(&cgEventCreateScrollWheelEvent, cg, "CGEventCreateScrollWheelEvent")
+	purego.RegisterLibFunc(&cgEventCreateScrollWheelEvent2, cg, "CGEventCreateScrollWheelEvent2")
 	purego.RegisterLibFunc(&cgEventKeyboardSetUnicode, cg, "CGEventKeyboardSetUnicodeString")
 	purego.RegisterLibFunc(&cgEventSetFlags, cg, "CGEventSetFlags")
 	purego.RegisterLibFunc(&cgEventSetIntegerValueField, cg, "CGEventSetIntegerValueField")
@@ -172,14 +188,15 @@ func postEvent(event uintptr) {
 }
 
 // postEventTo posts a CoreGraphics event and releases it, mirroring the C
-// SendTo() helper in key/keypress_c.h: when pid != 0 the event is delivered
-// to that specific process via CGEventPostToPid, otherwise it is posted to
-// the global HID event tap via CGEventPost.
+// SendTo() helper in key/keypress_c.h: when pid > 0 the event is delivered
+// to that specific process via CGEventPostToPid, otherwise (zero or an
+// invalid negative pid, which would wrap when narrowed to uint32) it is
+// posted to the global HID event tap via CGEventPost.
 func postEventTo(event uintptr, pid int) {
 	if event == 0 {
 		return
 	}
-	if pid != 0 {
+	if pid > 0 {
 		cgEventPostToPid(uint32(pid), event)
 	} else {
 		cgEventPost(kCGHIDEventTap, event)

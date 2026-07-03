@@ -39,6 +39,15 @@ func displayForIndex(displayId ...int) uint32 {
 	return cgMainDisplayID()
 }
 
+// MainDisplayID returns the main display's CGDirectDisplayID, mirroring the
+// Cgo backend's GetMainId. Returns 0 when the frameworks are unavailable.
+func MainDisplayID() int {
+	if !loaded {
+		return 0
+	}
+	return int(cgMainDisplayID())
+}
+
 // GetScreenSize returns the main display's width and height in pixels.
 func GetScreenSize() (int, int) {
 	if !loaded {

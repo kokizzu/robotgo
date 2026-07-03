@@ -228,3 +228,13 @@ func TestGetPid(t *testing.T) {
 		t.Error("GetPid() returned non-positive pid")
 	}
 }
+
+func TestKillInvalidPid(t *testing.T) {
+	// pid 0 / negative would signal the whole process group; must error.
+	if err := Kill(0); err == nil {
+		t.Error("Kill(0): expected error")
+	}
+	if err := Kill(-1); err == nil {
+		t.Error("Kill(-1): expected error")
+	}
+}

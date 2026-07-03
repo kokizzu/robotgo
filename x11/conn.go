@@ -135,12 +135,17 @@ func (c *conn) sync() {
 // backend re-establishes a fresh connection.
 func Close() {
 	connMu.Lock()
-	defer connMu.Unlock()
-	if globalConn == nil {
-		return
-	}
 	c := globalConn
 	globalConn = nil
+	connMu.Unlock()
+
+	if c == nil {
+		return
+	}
+	// Take the per-connection lock so an in-flight operation (KeyTap,
+	// TypeStr, ...) finishes before the underlying transport is closed.
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	if c.c != nil {
 		c.c.Close()
 	}

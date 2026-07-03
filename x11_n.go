@@ -3,8 +3,14 @@
 
 // Copyright (c) 2016-2026 AtomAI, All rights reserved.
 //
+// See the COPYRIGHT file at the top-level directory of this distribution and at
+// https://github.com/go-vgo/robotgo/blob/master/LICENSE
+//
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0>
+//
+// This file may not be copied, modified, or distributed
+// except according to those terms.
 
 // This file wires the pure-Go (Cgo-free) X11 implementation
 // (github.com/go-vgo/robotgo/x11) into the top-level robotgo package.
@@ -129,6 +135,17 @@ func GetScreenRect(displayId ...int) Rect {
 	r := x11.GetScreenRect(displayId...)
 	return Rect{Point{r.X, r.Y}, Size{r.W, r.H}}
 }
+
+// GetMainId get the main display id.
+func GetMainId() int { return x11.MainDisplayID() }
+
+// IsMain is main display.
+func IsMain(displayId int) bool { return displayId == GetMainId() }
+
+// Deprecated: use the ScaledF(),
+//
+// ScaleX get the primary display horizontal DPI, drop.
+func ScaleX() int { return x11.ScaleX() }
 
 // DisplaysNum get the number of displays.
 func DisplaysNum() int { return x11.DisplaysNum() }
