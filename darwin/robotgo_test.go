@@ -217,3 +217,28 @@ func TestScreenSize(t *testing.T) {
 		t.Errorf("GetScreenSize: got negative %dx%d", w, h)
 	}
 }
+
+func TestGetPixelColor(t *testing.T) {
+	// Headless / unpermissioned environments return the "000000" fallback;
+	// just ensure a valid 6-char hex string comes back without panicking.
+	c := GetPixelColor(1, 1)
+	if len(c) != 6 {
+		t.Errorf("GetPixelColor: got %q, want 6 hex chars", c)
+	}
+}
+
+func TestMainDisplayID(t *testing.T) {
+	if id := MainDisplayID(); id < 0 {
+		t.Errorf("MainDisplayID: got negative id %d", id)
+	}
+}
+
+func TestKillInvalidPid(t *testing.T) {
+	// pid 0 / negative would signal the whole process group; must error.
+	if err := Kill(0); err == nil {
+		t.Error("Kill(0): expected error")
+	}
+	if err := Kill(-1); err == nil {
+		t.Error("Kill(-1): expected error")
+	}
+}
