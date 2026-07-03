@@ -3,6 +3,7 @@ module github.com/go-vgo/robotgo
 go 1.25.0
 
 require (
+	github.com/ebitengine/purego v0.10.0
 	github.com/godbus/dbus/v5 v5.2.2
 	github.com/jezek/xgb v1.3.0
 	github.com/jezek/xgbutil v0.0.0-20260124183602-9fd151d6a51a
@@ -19,7 +20,6 @@ require (
 
 require (
 	github.com/dblohm7/wingoes v0.0.0-20250822163801-6d8e6105c62d // indirect
-	github.com/ebitengine/purego v0.10.0 // indirect
 	github.com/gen2brain/shm v0.2.1 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
