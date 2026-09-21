@@ -500,6 +500,66 @@ func TestMoveSmoothAbsoluteTarget(t *testing.T) {
 	}
 }
 
+func TestMoveRelativeUnknownPosition(t *testing.T) {
+	for _, linked := range []bool{false, true} {
+		t.Run(map[bool]string{false: "relative fallback", true: "linked stream"}[linked], func(t *testing.T) {
+			var streams []stream
+			if linked {
+				streams = []stream{{nodeID: 1, width: 800, height: 600}}
+			}
+			inj := installFakeConn(t, streams...)
+			MoveRelative(10, 20)
+			if len(inj.rel) != 1 || inj.rel[0] != (relCall{10, 20}) {
+				t.Fatalf("relative injection: got %+v", inj.rel)
+			}
+			if x, y, known := globalConn.position(); known || x != 0 || y != 0 {
+				t.Errorf("relative motion cannot establish an absolute position: (%d,%d), known=%v", x, y, known)
+			}
+			Move(100, 100)
+			if !linked && (len(inj.rel) != 3 || inj.rel[1] != (relCall{-cornerReset, -cornerReset}) || inj.rel[2] != (relCall{100, 100})) {
+				t.Errorf("Move must still reset the unknown origin: %+v", inj.rel)
+			}
+			if x, y := Location(); x != 100 || y != 100 {
+				t.Errorf("Location after absolute move: (%d,%d)", x, y)
+			}
+		})
+	}
+}
+
+type failTargetInjector struct{ fakeInjector }
+
+func (f *failTargetInjector) pointerMotion(dx, dy float64) error {
+	if len(f.rel) == 1 {
+		f.err = ErrNotSupported
+	}
+	return f.fakeInjector.pointerMotion(dx, dy)
+}
+
+func TestMoveSmoothUnknownStartFailure(t *testing.T) {
+	installFakeConn(t)
+	inj := &failTargetInjector{}
+	globalConn.inj = inj
+	if MoveSmooth(50, 50, 2, 0) {
+		t.Error("MoveSmooth reported success after target injection failed")
+	}
+	if len(inj.rel) != 2 {
+		t.Fatalf("got %d calls, want reset then target", len(inj.rel))
+	}
+	if x, y, known := globalConn.position(); !known || x != 0 || y != 0 {
+		t.Errorf("successful reset position lost: (%d,%d), known=%v", x, y, known)
+	}
+}
+
+func TestMoveSmoothUnknownStartClampedTarget(t *testing.T) {
+	installFakeConn(t, stream{nodeID: 1, width: 100, height: 100})
+	if MoveSmooth(200, 200, 2, 0) {
+		t.Error("MoveSmooth reported reaching a target outside the stream")
+	}
+	if x, y := Location(); x != 99 || y != 99 {
+		t.Errorf("clamped position: (%d,%d), want (99,99)", x, y)
+	}
+}
+
 func TestMoveInjectErrorKeepsPosition(t *testing.T) {
 	inj := installFakeConn(t, stream{nodeID: 1, width: 1000, height: 1000})
 	Move(10, 10)

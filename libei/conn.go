@@ -194,9 +194,11 @@ func (c *conn) setPos(x, y int) {
 func (c *conn) addPos(dx, dy int) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	if !c.posKnown {
+		return
+	}
 	c.posX += dx
 	c.posY += dy
-	c.posKnown = true
 	if r, ok := c.bounds(); ok {
 		c.posX = clamp(c.posX, r.X, r.X+r.W-1)
 		c.posY = clamp(c.posY, r.Y, r.Y+r.H-1)

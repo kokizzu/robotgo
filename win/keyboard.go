@@ -200,7 +200,7 @@ func keyToVK(key string) (vk uint16, mods uint8, ok bool) {
 		return v, 0, true
 	}
 	r := []rune(key)
-	if len(r) == 1 {
+	if len(r) == 1 && r[0] <= 0xffff {
 		res := win.VkKeyScan(uint16(r[0]))
 		if res != -1 {
 			return uint16(byte(res & 0xff)), uint8((res >> 8) & 0xff), true
@@ -361,11 +361,11 @@ func KeyTap(key string, args ...interface{}) error {
 	return nil
 }
 
-// appendUniqueMod appends mod unless an equivalent modifier (ignoring an
-// l/r prefix) is already present.
+// appendUniqueMod appends mod unless an equivalent modifier (including
+// left/right variants and aliases) is already present.
 func appendUniqueMod(mods []string, mod string) []string {
 	for _, m := range mods {
-		if m == mod || strings.TrimLeft(m, "lr") == mod {
+		if m == mod || m == mod+"l" || m == mod+"r" || (mod == "ctrl" && m == "control") {
 			return mods
 		}
 	}

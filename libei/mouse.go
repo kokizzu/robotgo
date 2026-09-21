@@ -96,8 +96,8 @@ func MoveRelative(x, y int) {
 // args: steps (default 20), sleep ms between steps (default 5). Returns true
 // on success.
 //
-// When the current position is unknown (no move issued yet) and a stream is
-// linked, it jumps straight to the target; without a stream it returns false.
+// When the current position is unknown, it jumps via Move, using a corner
+// reset first if no stream is linked.
 func MoveSmooth(x, y int, args ...interface{}) bool {
 	c, err := pointerReady()
 	if err != nil {
@@ -120,8 +120,8 @@ func MoveSmooth(x, y int, args ...interface{}) bool {
 	sx, sy, known := c.position()
 	if !known {
 		Move(x, y)
-		_, _, known = c.position()
-		return known
+		cx, cy, known := c.position()
+		return known && cx == x && cy == y
 	}
 
 	for i := 1; i <= steps; i++ {
@@ -316,7 +316,8 @@ func MoveClick(x, y int, args ...interface{}) {
 // The RemoteDesktop portal does not expose the real cursor position, so this
 // returns the last position injected by this backend (Move, MoveRelative,
 // MoveSmooth, ...). It is (0, 0) until the first move and does not follow
-// movement made by the physical mouse.
+// movement made by the physical mouse. Relative motion alone cannot establish
+// an absolute position; Location stays (0, 0) until Move establishes one.
 func Location() (int, int) {
 	c, err := ensureConn()
 	if err != nil {

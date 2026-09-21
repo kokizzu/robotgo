@@ -64,7 +64,8 @@ type conn struct {
 	keymapSet bool
 	// mods is the XKB modifier mask currently held down via the virtual
 	// keyboard; it is reported to the compositor with the modifiers request.
-	mods uint32
+	mods     uint32
+	heldMods map[uint32]bool
 
 	// dispatch loop
 	dispatchDone chan struct{}

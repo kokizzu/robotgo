@@ -127,14 +127,21 @@ func (c *conn) sendKey(ts, code, state uint32) error {
 		if err := c.keyboard.Key(ts, code, state); err != nil {
 			return err
 		}
-		mask, isMod := modMask[code]
-		if !isMod {
+		if _, isMod := modMask[code]; !isMod {
 			return nil
 		}
 		if state == keyStatePressed {
-			c.mods |= mask
+			if c.heldMods == nil {
+				c.heldMods = make(map[uint32]bool)
+			}
+			c.heldMods[code] = true
 		} else {
-			c.mods &^= mask
+			delete(c.heldMods, code)
+		}
+		// Left and right keys share a mask; releasing one must retain the other.
+		c.mods = 0
+		for held := range c.heldMods {
+			c.mods |= modMask[held]
 		}
 		return c.keyboard.Modifiers(c.mods, 0, 0, 0)
 	})
