@@ -39,26 +39,31 @@ const cornerReset = 1 << 16
 // motion, so Move sends a delta from the last tracked position; when no
 // position has been tracked yet the pointer is first parked in the top-left
 // corner with a large relative move so the origin is known.
-func Move(x, y int, displayId ...int) {
+func Move(x, y int, displayId ...int) { move(x, y, displayId...) }
+
+// move implements Move and reports whether the pointer was injected exactly at
+// (x, y): false when injection fails or the target was clamped into a stream.
+func move(x, y int, displayId ...int) bool {
 	c, err := pointerReady()
 	if err != nil {
-		return
+		return false
 	}
 
 	if len(c.streams) == 0 {
 		cx, cy, ok := c.position()
 		if !ok {
 			if err := c.inj.pointerMotion(-cornerReset, -cornerReset); err != nil {
-				return
+				return false
 			}
 			c.setPos(0, 0)
 			cx, cy = 0, 0
 		}
-		if err := c.inj.pointerMotion(float64(x-cx), float64(y-cy)); err == nil {
+		err := c.inj.pointerMotion(float64(x-cx), float64(y-cy))
+		if err == nil {
 			c.setPos(x, y)
 		}
 		mouseDelay()
-		return
+		return err == nil
 	}
 
 	idx, found := c.streamAt(x, y)
@@ -74,10 +79,12 @@ func Move(x, y int, displayId ...int) {
 		lx = clamp(lx, 0, int(s.width)-1)
 		ly = clamp(ly, 0, int(s.height)-1)
 	}
-	if err := c.inj.pointerMotionAbsolute(s.nodeID, float64(lx), float64(ly)); err == nil {
+	err = c.inj.pointerMotionAbsolute(s.nodeID, float64(lx), float64(ly))
+	if err == nil {
 		c.setPos(lx+int(s.x), ly+int(s.y))
 	}
 	mouseDelay()
+	return err == nil && found
 }
 
 // MoveRelative moves the mouse relative to its current position.
@@ -96,8 +103,8 @@ func MoveRelative(x, y int) {
 // args: steps (default 20), sleep ms between steps (default 5). Returns true
 // on success.
 //
-// When the current position is unknown (no move issued yet) and a stream is
-// linked, it jumps straight to the target; without a stream it returns false.
+// When the current position is unknown, it jumps via Move, using a corner
+// reset first if no stream is linked.
 func MoveSmooth(x, y int, args ...interface{}) bool {
 	c, err := pointerReady()
 	if err != nil {
@@ -119,9 +126,7 @@ func MoveSmooth(x, y int, args ...interface{}) bool {
 
 	sx, sy, known := c.position()
 	if !known {
-		Move(x, y)
-		_, _, known = c.position()
-		return known
+		return move(x, y)
 	}
 
 	for i := 1; i <= steps; i++ {
@@ -316,7 +321,8 @@ func MoveClick(x, y int, args ...interface{}) {
 // The RemoteDesktop portal does not expose the real cursor position, so this
 // returns the last position injected by this backend (Move, MoveRelative,
 // MoveSmooth, ...). It is (0, 0) until the first move and does not follow
-// movement made by the physical mouse.
+// movement made by the physical mouse. Relative motion alone cannot establish
+// an absolute position; Location stays (0, 0) until Move establishes one.
 func Location() (int, int) {
 	c, err := ensureConn()
 	if err != nil {
