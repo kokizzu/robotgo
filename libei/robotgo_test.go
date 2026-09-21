@@ -550,6 +550,20 @@ func TestMoveSmoothUnknownStartFailure(t *testing.T) {
 	}
 }
 
+// Target (0,0) coincides with the reset origin, so the tracked position alone
+// cannot reveal that the target injection failed.
+func TestMoveSmoothUnknownStartOriginFailure(t *testing.T) {
+	installFakeConn(t)
+	inj := &failTargetInjector{}
+	globalConn.inj = inj
+	if MoveSmooth(0, 0, 2, 0) {
+		t.Error("MoveSmooth reported success after target injection to (0,0) failed")
+	}
+	if len(inj.rel) != 2 {
+		t.Fatalf("got %d calls, want reset then target", len(inj.rel))
+	}
+}
+
 func TestMoveSmoothUnknownStartClampedTarget(t *testing.T) {
 	installFakeConn(t, stream{nodeID: 1, width: 100, height: 100})
 	if MoveSmooth(200, 200, 2, 0) {
